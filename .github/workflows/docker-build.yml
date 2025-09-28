@@ -60,6 +60,6 @@ jobs:
             type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:cache
           cache-to: |
             type=gha,mode=max
-            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:cache,mode=max
+            type=registry,ref=${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:cache,mode=max,image-manifest=true,oci-mediatypes=true
           build-args: |
             BUILDKIT_INLINE_CACHE=1
