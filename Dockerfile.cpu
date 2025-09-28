@@ -48,7 +48,6 @@ WORKDIR /src
 
 COPY src/ .
 
-# Install Custom Nodes
 RUN --mount=type=cache,target=/root/.cache/pip \
     ./install_custom_nodes.sh
 

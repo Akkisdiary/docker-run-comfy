@@ -47,6 +47,25 @@ fi
 mkdir -p "$NETWORK_VOLUME/cache/transformers"
 mkdir -p "$NETWORK_VOLUME/cache/huggingface"
 
+# Set up workflows symlink for development
+if [ -d "/src/workflows" ]; then
+    echo "🔗 Setting up workflows symlink for development..."
+    
+    # Create the workflows directory structure if it doesn't exist
+    mkdir -p "$COMFYUI_DIR/user/default"
+    
+    # Remove existing workflows directory if it exists
+    if [ -d "$COMFYUI_DIR/user/default/workflows" ]; then
+        rm -rf "$COMFYUI_DIR/user/default/workflows"
+    fi
+    
+    # Create symlink to workflows
+    ln -sf "/src/workflows" "$COMFYUI_DIR/user/default/workflows"
+    echo "✅ Workflows linked to ComfyUI"
+else
+    echo "📁 No workflows mount found, using built-in workflows"
+fi
+
 # Start JupyterLab in ComfyUI directory
 echo "📓 Starting JupyterLab server..."
 jupyter-lab --ip=0.0.0.0 --allow-root --no-browser \
