@@ -13,16 +13,26 @@ COMFYUI_DIR="${COMFYUI_DIR:-$NETWORK_VOLUME/ComfyUI}"
 
 # Handle ComfyUI installation based on network volume state
 if [ ! -f "$COMFYUI_DIR/main.py" ]; then
-    echo "📦 ComfyUI not found in $NETWORK_VOLUME, copying from container..."
+    echo "📦 ComfyUI not found in $NETWORK_VOLUME, installing fresh copy..."
+    
+    # Check if ComfyUI exists in container (from Docker build)
     if [ -d "/ComfyUI" ] && [ -f "/ComfyUI/main.py" ]; then
-        # Copy entire ComfyUI installation to network volume
-        echo "📁 Copying ComfyUI installation..."
+        # Move entire ComfyUI installation to network volume
+        echo "📁 Moving ComfyUI from container build..."
         mv /ComfyUI "$COMFYUI_DIR"
-        
-        echo "✅ ComfyUI copied to $NETWORK_VOLUME"
+        echo "✅ ComfyUI moved to $NETWORK_VOLUME"
     else
-        echo "❌ ComfyUI not found in container at /ComfyUI"
-        exit 1
+        # Install ComfyUI directly to network volume
+        echo "📦 Installing ComfyUI directly to network volume..."
+        cd "$NETWORK_VOLUME"
+        /usr/bin/yes | comfy --workspace "$NETWORK_VOLUME" install
+        
+        if [ -f "$COMFYUI_DIR/main.py" ]; then
+            echo "✅ ComfyUI installed to $NETWORK_VOLUME"
+        else
+            echo "❌ ComfyUI installation failed"
+            exit 1
+        fi
     fi
 else
     echo "✅ ComfyUI found in $NETWORK_VOLUME, using existing installation"

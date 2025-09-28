@@ -127,11 +127,11 @@ check_download_progress() {
 }
 
 # Export functions for use in other scripts
-export -f download_default_models
+export -f download_models
 export -f wait_for_downloads
 export -f check_download_progress
 
 # Start downloads if called directly
 if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    download_default_models
+    download_models
 fi

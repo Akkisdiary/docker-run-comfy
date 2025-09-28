@@ -3,14 +3,16 @@ FROM nvidia/cuda:12.8.1-cudnn-devel-ubuntu24.04
 ENV DEBIAN_FRONTEND=noninteractive \
    PIP_PREFER_BINARY=1 \
    PYTHONUNBUFFERED=1 \
-   CMAKE_BUILD_PARALLEL_LEVEL=8
+   CMAKE_BUILD_PARALLEL_LEVEL=8 \
+   PIP_DISABLE_PIP_VERSION_CHECK=1 \
+   PIP_NO_INPUT=1
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends \
         python3.12 python3.12-venv python3.12-dev \
         python3-pip \
-        curl ffmpeg ninja-build git jq aria2 git-lfs wget vim \
+        curl ffmpeg ninja-build git jq aria2 git-lfs wget vim unzip \
         libgl1 libglib2.0-0 build-essential gcc && \
     \
     # make Python3.12 the default python & pip
@@ -32,31 +34,46 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install packaging setuptools wheel
 
-# Runtime libraries and Jupyter
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install comfy-cli jupyterlab jupyterlab-lsp \
         jupyter-server jupyter-server-terminals \
-        ipykernel huggingface-hub
+        ipykernel huggingface-hub opencv-python
 
-# ComfyUI install
 RUN --mount=type=cache,target=/root/.cache/pip \
     /usr/bin/yes | comfy --workspace /ComfyUI install
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    for repo in \
+        https://github.com/rgthree/rgthree-comfy.git \
+        https://github.com/city96/ComfyUI-GGUF \
+        https://github.com/ClownsharkBatwing/RES4LYF \
+        https://github.com/giriss/comfy-image-saver \
+    ; do \
+        cd /ComfyUI/custom_nodes; \
+        repo_dir=$(basename "$repo" .git); \
+        if [ "$repo" = "https://github.com/ssitu/ComfyUI_UltimateSDUpscale.git" ]; then \
+            git clone --recursive "$repo"; \
+        else \
+            git clone "$repo"; \
+        fi; \
+        if [ -f "/ComfyUI/custom_nodes/$repo_dir/requirements.txt" ]; then \
+            pip install -r "/ComfyUI/custom_nodes/$repo_dir/requirements.txt"; \
+        fi; \
+        if [ -f "/ComfyUI/custom_nodes/$repo_dir/install.py" ]; then \
+            python "/ComfyUI/custom_nodes/$repo_dir/install.py"; \
+        fi; \
+    done
 
 # Create directory for custom files (separate from network volume)
 RUN mkdir -p /src
 WORKDIR /src
 
-# Copy and install custom nodes first (for better layer caching)
-COPY src/install_custom_nodes.sh .
-RUN --mount=type=cache,target=/root/.cache/pip \
-    ./install_custom_nodes.sh
+# Make download functions globally available
+COPY src/download_hf src/download_civitai /usr/local/bin/
+RUN chmod +x /usr/local/bin/download_hf /usr/local/bin/download_civitai
 
 # Copy the rest of the source files
 COPY src/ .
-
-# Make download functions globally available
-RUN cp download_hf download_civitai /usr/local/bin/ && \
-    chmod +x /usr/local/bin/download_hf /usr/local/bin/download_civitai
 
 EXPOSE 8188 8888
 

@@ -28,9 +28,9 @@ download_huggingface() {
     # Create target directory if it doesn't exist
     mkdir -p "$target_dir"
     
-    # Use HuggingFace CLI to download from URL to target directory
+    # Use aria2 for direct URL download (faster and more reliable)
     cd "$target_dir"
-    huggingface-cli download --url "$download_url" --local-dir .
+    aria2c -x 16 -s 16 -k 1M -o "$filename" "$download_url"
     
     if [ $? -eq 0 ]; then
         echo "✅ HuggingFace download completed for $download_url"

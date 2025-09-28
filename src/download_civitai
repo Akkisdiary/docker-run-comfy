@@ -18,10 +18,25 @@ download_civitai() {
     
     # Get model info from CivitAI API
     echo "🔍 Fetching model info from CivitAI API..."
-    local api_response=$(curl -s "https://civitai.com/api/v1/model-versions/$model_id")
+    
+    # Build curl command with optional token
+    local curl_cmd="curl -s"
+    if [ -n "$CIVITAI_TOKEN" ]; then
+        curl_cmd="$curl_cmd -H 'Authorization: Bearer $CIVITAI_TOKEN'"
+        echo "🔑 Using CivitAI authentication token"
+    fi
+    
+    local api_response=$(eval "$curl_cmd 'https://civitai.com/api/v1/model-versions/$model_id'")
     
     if [ $? -ne 0 ] || [ -z "$api_response" ]; then
         echo "❌ Failed to fetch model info from CivitAI API"
+        return 1
+    fi
+    
+    # Check if API response contains an error
+    local error_message=$(echo "$api_response" | jq -r '.error // empty')
+    if [ -n "$error_message" ]; then
+        echo "❌ CivitAI API error: $error_message"
         return 1
     fi
     
@@ -31,7 +46,14 @@ download_civitai() {
     
     if [ -z "$download_url" ] || [ -z "$filename" ]; then
         echo "❌ Could not extract download URL or filename from API response"
+        echo "🔍 API Response: $api_response"
         return 1
+    fi
+    
+    # Check if the model requires authentication
+    if [[ "$download_url" == *"civitai.com/api/download"* ]] && [ -z "$CIVITAI_TOKEN" ]; then
+        echo "⚠️  This model may require CivitAI authentication"
+        echo "💡 Set CIVITAI_TOKEN environment variable to download restricted models"
     fi
     
     local target_file="$target_dir/$filename"
@@ -41,18 +63,85 @@ download_civitai() {
         echo "✅ File already exists, skipping download: $filename"
         return 0
     fi
-    
     echo "📥 Downloading: $filename"
     echo "🔗 URL: $download_url"
     
     # Download with aria2 for better performance
     cd "$target_dir"
-    aria2c -x 16 -s 16 -k 1M -o "$filename" "$download_url"
     
-    if [ $? -eq 0 ]; then
-        echo "✅ CivitAI download completed: $filename"
+    # Get the actual download URL by following redirects with curl first
+    echo "🔄 Resolving download URL..."
+    local curl_redirect_cmd="curl -s -I -L"
+    if [ -n "$CIVITAI_TOKEN" ]; then
+        curl_redirect_cmd="$curl_redirect_cmd -H 'Authorization: Bearer $CIVITAI_TOKEN'"
+    fi
+    curl_redirect_cmd="$curl_redirect_cmd '$download_url'"
+    
+    local final_url=$(eval "$curl_redirect_cmd" | grep -i '^location:' | tail -1 | sed 's/^location: *//i' | tr -d '\r')
+    
+    if [ -z "$final_url" ]; then
+        echo "⚠️  Could not resolve final download URL, using original URL"
+        final_url="$download_url"
     else
-        echo "❌ CivitAI download failed for model ID: $model_id"
+        echo "✅ Resolved final URL: ${final_url:0:100}..."
+    fi
+    
+    # Build aria2c command without auth headers for the final URL
+    local aria2_cmd="aria2c -x 16 -s 16 -k 1M -o \"$filename\""
+    aria2_cmd="$aria2_cmd --user-agent=\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\""
+    aria2_cmd="$aria2_cmd --header=\"Accept: */*\""
+    aria2_cmd="$aria2_cmd --max-tries=3 --retry-wait=5"
+    aria2_cmd="$aria2_cmd \"$final_url\""
+    
+    eval "$aria2_cmd"
+    local download_exit_code=$?
+    
+    if [ $download_exit_code -eq 0 ]; then
+        echo "✅ CivitAI download completed: $filename"
+        
+        # Check if the downloaded file is a zip and extract it
+        if [[ "$filename" == *.zip ]]; then
+            echo "📦 Detected zip file, extracting contents..."
+            
+            # Create extraction directory
+            local extract_dir="${filename%.*}_extracted"
+            mkdir -p "$extract_dir"
+            
+            # Extract zip file
+            if unzip -q "$filename" -d "$extract_dir"; then
+                echo "✅ Successfully extracted: $filename"
+                echo "📁 Contents extracted to: $extract_dir/"
+                
+                # List extracted contents
+                echo "📋 Extracted files:"
+                ls -la "$extract_dir/"
+                
+                # Optionally remove the zip file after extraction
+                # Uncomment the next line if you want to delete zip files after extraction
+                # rm "$filename" && echo "🗑️  Removed original zip file: $filename"
+            else
+                echo "❌ Failed to extract zip file: $filename"
+                echo "⚠️  Keeping original zip file"
+            fi
+        fi
+    else
+        echo "❌ CivitAI download failed for model ID: $model_id (exit code: $download_exit_code)"
+        
+        # Provide specific error messages based on common issues
+        case $download_exit_code in
+            22)
+                echo "💡 HTTP 400/403/404 error - Model may be private, deleted, or require authentication"
+                echo "🔑 Try setting CIVITAI_TOKEN if you have access to this model"
+                ;;
+            24)
+                echo "💡 Authorization failed - Invalid or missing CivitAI token"
+                echo "🔑 Check your CIVITAI_TOKEN environment variable"
+                ;;
+            *)
+                echo "💡 Network or server error - Check your internet connection"
+                ;;
+        esac
+        
         return 1
     fi
 }

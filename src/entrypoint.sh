@@ -55,18 +55,11 @@ wait_for_downloads
 
 # STEP: Start ComfyUI (after models are ready)
 echo "📋 STEP: Starting ComfyUI"
-source "$SCRIPT_DIR/start_comfyui.sh" &
-COMFYUI_STARTUP_PID=$!
-echo "📦 ComfyUI startup running in background (PID: $COMFYUI_STARTUP_PID)"
-
-# Wait for ComfyUI startup to complete
-echo "⏳ Waiting for ComfyUI startup to complete..."
-wait $COMFYUI_STARTUP_PID
-if [ $? -ne 0 ]; then
-    echo "❌ ComfyUI startup failed"
-    exit 1
-fi
+source "$SCRIPT_DIR/start_comfyui.sh"
 
 # STEP: Monitor Services
 echo "📋 STEP: Service Monitoring"
+# Export the PIDs for the monitoring script
+export COMFYUI_PID
+export JUPYTER_PID
 source "$SCRIPT_DIR/monitor_services.sh"
