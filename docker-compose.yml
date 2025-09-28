@@ -2,7 +2,7 @@ services:
   run-comfy-wan:
     build:
       context: .
-      dockerfile: Dockerfile.m1
+      dockerfile: Dockerfile.cpu
     
     container_name: run-comfy-wan
     hostname: run-comfy-wan
@@ -18,7 +18,7 @@ services:
     # Simulate RunPod network volume by mounting entire /workspace
     volumes:
       - ./workspace:/workspace
-      - ./scripts:/scripts
+      - ./src:/src
     
     # Resource limits appropriate for testing
     deploy:

@@ -32,7 +32,7 @@ if [ ! -f "$COMFYUI_DIR/main.py" ]; then
     if [ -d "/ComfyUI" ] && [ -f "/ComfyUI/main.py" ]; then
         # Copy entire ComfyUI installation to network volume
         echo "📁 Copying ComfyUI installation..."
-        cp -r /ComfyUI "$COMFYUI_DIR"
+        mv /ComfyUI "$COMFYUI_DIR"
         
         echo "✅ ComfyUI copied to $NETWORK_VOLUME"
     else

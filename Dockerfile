@@ -46,19 +46,20 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -e . && \
     rm -rf /tmp/SageAttention
 
-# ------------------------------------------------------------
 # ComfyUI install
-# ------------------------------------------------------------
 RUN --mount=type=cache,target=/root/.cache/pip \
     /usr/bin/yes | comfy --workspace /ComfyUI install
 
-# ------------------------------------------------------------
-# Create app directory for custom files (separate from network volume)
-RUN mkdir -p /scripts
-WORKDIR /scripts
+# Create directory for custom files (separate from network volume)
+RUN mkdir -p /src
+WORKDIR /src
 
-# Copy startup script to scripts directory
-COPY scripts/ .
-RUN chmod +x start_script.sh
+COPY src/ .
+
+# Install Custom Nodes
+RUN --mount=type=cache,target=/root/.cache/pip \
+    ./install_custom_nodes.sh
+
+EXPOSE 8188 8888
 
 CMD ["./start_script.sh"]
