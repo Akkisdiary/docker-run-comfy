@@ -53,4 +53,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 EXPOSE 8188 8888
 
-CMD ["./start_script.sh"]
+CMD ["./entrypoint.sh"]

@@ -38,14 +38,6 @@ RUN --mount=type=cache,target=/root/.cache/pip \
         jupyter-server jupyter-server-terminals \
         ipykernel
 
-# Install SageAttention 2.2.0 (SageAttention2++) for optimal performance
-RUN --mount=type=cache,target=/root/.cache/pip \
-    git clone https://github.com/thu-ml/SageAttention.git /tmp/SageAttention && \
-    cd /tmp/SageAttention && \
-    export EXT_PARALLEL=4 NVCC_APPEND_FLAGS="--threads 8" MAX_JOBS=32 && \
-    pip install -e . && \
-    rm -rf /tmp/SageAttention
-
 # ComfyUI install
 RUN --mount=type=cache,target=/root/.cache/pip \
     /usr/bin/yes | comfy --workspace /ComfyUI install
@@ -61,4 +53,4 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 EXPOSE 8188 8888
 
-CMD ["./start_script.sh"]
+CMD ["./entrypoint.sh"]
