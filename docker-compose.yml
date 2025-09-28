@@ -17,8 +17,8 @@ services:
     
     # Simulate RunPod network volume by mounting entire /workspace
     volumes:
-      - ./workspace:/workspace
       - ./src:/src
+      # - ./workspace:/workspace
     
     # Resource limits appropriate for testing
     deploy:
