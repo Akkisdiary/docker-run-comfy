@@ -6,7 +6,7 @@ on:
     paths:
       - 'Dockerfile'
       - 'Dockerfile.m1'
-      - 'scripts/**'
+      - 'src/**'
       - '.github/workflows/docker-build.yml'
   workflow_dispatch:
 

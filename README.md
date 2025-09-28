@@ -19,7 +19,7 @@ High-performance RunPod template for **vanilla ComfyUI** with CUDA 12.8 optimiza
 ```bash
 # Option 1: Use pre-built Docker image from Docker Hub
 # Replace 'your-username' with your actual Docker Hub username
-docker pull your-username/run-comfy-wan:latest
+docker pull your-username/comfyui-runpod:latest
 
 # Option 2: Build locally and upload template to RunPod
 # RunPod handles container orchestration, GPU access, and networking
@@ -145,16 +145,16 @@ This project includes GitHub Actions workflows for automated Docker image buildi
 **Available Images:**
 ```bash
 # Latest production image with CUDA 12.8
-docker pull your-username/run-comfy-wan:latest
+docker pull your-username/comfyui-runpod:latest
 
 # Specific CUDA version
-docker pull your-username/run-comfy-wan:cuda-12.8
+docker pull your-username/comfyui-runpod:cuda-12.8
 
 # M1 Mac CPU-only version
-docker pull your-username/run-comfy-wan:m1-latest
+docker pull your-username/comfyui-runpod:m1-latest
 
 # Specific version (from git tags)
-docker pull your-username/run-comfy-wan:v1.0.0
+docker pull your-username/comfyui-runpod:v1.0.0
 ```
 
 ### **⚙️ Setup Instructions**
