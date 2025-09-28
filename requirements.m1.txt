@@ -64,8 +64,8 @@ comfy-cli==1.5.1
 # =============================================================================
 # DEVELOPMENT & ANALYSIS TOOLS
 # =============================================================================
-# Jupyter Environment
-jupyterlab==4.4.9
+# Jupyter Environment (classic Notebook - more reliable for Docker)
+notebook==6.5.7
 
 # Enhanced Interactive Python
 ipython>=9.5.0
