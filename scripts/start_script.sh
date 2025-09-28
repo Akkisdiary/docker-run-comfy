@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -e
 
-echo "🚀 Starting ComfyUI RunPod Template..."
+echo "🚀 Setup started..."
 
 # Use libtcmalloc for better memory management (if available)
 TCMALLOC="$(ldconfig -p 2>/dev/null | grep -Po "libtcmalloc.so.\d" | head -n 1 || true)"
