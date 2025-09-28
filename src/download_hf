@@ -1,0 +1,44 @@
+#!/bin/bash
+
+# HuggingFace Download Script
+# Downloads models from HuggingFace URLs
+
+set +e  # Don't exit on errors
+
+# Function to download from HuggingFace
+download_huggingface() {
+    local download_url="$1"
+    local target_dir="${2:-.}"
+    
+    # Extract filename from URL
+    local filename=$(basename "$download_url")
+    local target_file="$target_dir/$filename"
+    
+    echo "🤗 Checking HuggingFace model: $filename"
+    echo "📁 Target directory: $target_dir"
+    
+    # Check if file already exists
+    if [ -f "$target_file" ]; then
+        echo "✅ File already exists, skipping download: $filename"
+        return 0
+    fi
+    
+    echo "📥 Downloading from HuggingFace URL: $download_url"
+    
+    # Create target directory if it doesn't exist
+    mkdir -p "$target_dir"
+    
+    # Use HuggingFace CLI to download from URL to target directory
+    cd "$target_dir"
+    huggingface-cli download --url "$download_url" --local-dir .
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ HuggingFace download completed for $download_url"
+    else
+        echo "❌ HuggingFace download failed for $download_url"
+        return 1
+    fi
+}
+
+# Call the function with all arguments
+download_huggingface "$@"

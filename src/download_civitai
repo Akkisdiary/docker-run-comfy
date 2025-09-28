@@ -1,0 +1,61 @@
+#!/bin/bash
+
+# CivitAI Download Script
+# Downloads models from CivitAI using model version IDs
+
+set +e  # Don't exit on errors
+
+# Function to download from CivitAI using direct API
+download_civitai() {
+    local model_id="$1"
+    local target_dir="${2:-.}"
+    
+    echo "🎨 Checking CivitAI model ID: $model_id"
+    echo "📁 Target directory: $target_dir"
+    
+    # Create target directory if it doesn't exist
+    mkdir -p "$target_dir"
+    
+    # Get model info from CivitAI API
+    echo "🔍 Fetching model info from CivitAI API..."
+    local api_response=$(curl -s "https://civitai.com/api/v1/model-versions/$model_id")
+    
+    if [ $? -ne 0 ] || [ -z "$api_response" ]; then
+        echo "❌ Failed to fetch model info from CivitAI API"
+        return 1
+    fi
+    
+    # Extract download URL and filename using jq for robust JSON parsing
+    local download_url=$(echo "$api_response" | jq -r '.files[0].downloadUrl // empty')
+    local filename=$(echo "$api_response" | jq -r '.files[0].name // empty')
+    
+    if [ -z "$download_url" ] || [ -z "$filename" ]; then
+        echo "❌ Could not extract download URL or filename from API response"
+        return 1
+    fi
+    
+    local target_file="$target_dir/$filename"
+    
+    # Check if file already exists
+    if [ -f "$target_file" ]; then
+        echo "✅ File already exists, skipping download: $filename"
+        return 0
+    fi
+    
+    echo "📥 Downloading: $filename"
+    echo "🔗 URL: $download_url"
+    
+    # Download with aria2 for better performance
+    cd "$target_dir"
+    aria2c -x 16 -s 16 -k 1M -o "$filename" "$download_url"
+    
+    if [ $? -eq 0 ]; then
+        echo "✅ CivitAI download completed: $filename"
+    else
+        echo "❌ CivitAI download failed for model ID: $model_id"
+        return 1
+    fi
+}
+
+# Call the function with all arguments
+download_civitai "$@"

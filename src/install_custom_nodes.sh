@@ -19,6 +19,7 @@ CUSTOM_NODE_URLS=(
     "https://github.com/rgthree/rgthree-comfy.git"
     "https://github.com/city96/ComfyUI-GGUF"
     "https://github.com/giriss/comfy-image-saver"
+    "https://github.com/ClownsharkBatwing/RES4LYF"
 )
 
 # Helper function to install a single custom node

@@ -10,7 +10,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get install -y --no-install-recommends \
         python3.12 python3.12-venv python3.12-dev \
         python3-pip \
-        curl ffmpeg ninja-build git aria2 git-lfs wget vim \
+        curl ffmpeg ninja-build git jq aria2 git-lfs wget vim \
         libgl1 libglib2.0-0 build-essential gcc && \
     \
     # make Python3.12 the default python & pip
@@ -32,11 +32,11 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install packaging setuptools wheel
 
-# Install Python packages with pip cache
+# Runtime libraries and Jupyter
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip install comfy-cli jupyterlab jupyterlab-lsp \
         jupyter-server jupyter-server-terminals \
-        ipykernel
+        ipykernel huggingface-hub
 
 # ComfyUI install
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -46,10 +46,17 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN mkdir -p /src
 WORKDIR /src
 
-COPY src/ .
-
+# Copy and install custom nodes first (for better layer caching)
+COPY src/install_custom_nodes.sh .
 RUN --mount=type=cache,target=/root/.cache/pip \
     ./install_custom_nodes.sh
+
+# Copy the rest of the source files
+COPY src/ .
+
+# Make download functions globally available
+RUN cp download_hf download_civitai /usr/local/bin/ && \
+    chmod +x /usr/local/bin/download_hf /usr/local/bin/download_civitai
 
 EXPOSE 8188 8888
 
