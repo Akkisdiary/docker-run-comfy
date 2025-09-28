@@ -27,10 +27,13 @@ COMFYUI_DIR="$NETWORK_VOLUME/ComfyUI"
 mkdir -p "$NETWORK_VOLUME"
 
 # Handle ComfyUI installation based on network volume state
-if [ ! -d "$COMFYUI_DIR" ]; then
+if [ ! -f "$COMFYUI_DIR/main.py" ]; then
     echo "📦 ComfyUI not found in network volume, copying from container..."
-    if [ -d "/ComfyUI" ]; then
+    if [ -d "/ComfyUI" ] && [ -f "/ComfyUI/main.py" ]; then
+        # Copy entire ComfyUI installation to network volume
+        echo "📁 Copying ComfyUI installation..."
         cp -r /ComfyUI "$COMFYUI_DIR"
+        
         echo "✅ ComfyUI copied to network volume for persistence"
     else
         echo "❌ ComfyUI not found in container at /ComfyUI"
@@ -40,12 +43,9 @@ else
     echo "✅ ComfyUI found in network volume, using existing installation"
 fi
 
-# Create additional directories if they don't exist
-mkdir -p "$COMFYUI_DIR/models/checkpoints"
-mkdir -p "$COMFYUI_DIR/models/vae"
-mkdir -p "$COMFYUI_DIR/custom_nodes"
-mkdir -p "$COMFYUI_DIR/input"
-mkdir -p "$COMFYUI_DIR/output"
+# Create additional cache directories
+mkdir -p "$NETWORK_VOLUME/cache/transformers"
+mkdir -p "$NETWORK_VOLUME/cache/huggingface"
 
 # Start JupyterLab in ComfyUI directory
 echo "📓 Starting JupyterLab server..."
@@ -61,15 +61,39 @@ echo "✅ JupyterLab started (PID: $JUPYTER_PID)"
 echo "▶️  Starting ComfyUI server..."
 COMFYUI_URL="http://127.0.0.1:8188"
 POD_ID="${RUNPOD_POD_ID:-container}"
-LOG_FILE="$NETWORK_VOLUME/comfyui_${POD_ID}.log"
+LOG_FILE="/comfyui_${POD_ID}.log"
 
-# Check if sageattention is installed and available
-if python3 -c "import sageattention" 2>/dev/null; then
-    echo "🔧 SageAttention detected - using optimized mode"
-    nohup python3 "$COMFYUI_DIR/main.py" --listen --use-sage-attention > "$LOG_FILE" 2>&1 &
+# Function to handle shutdown gracefully
+cleanup() {
+    echo "🛑 Shutting down services..."
+    if [ -n "$COMFYUI_PID" ] && kill -0 "$COMFYUI_PID" 2>/dev/null; then
+        kill -TERM "$COMFYUI_PID"
+        wait "$COMFYUI_PID" 2>/dev/null || true
+    fi
+    if [ -n "$JUPYTER_PID" ] && kill -0 "$JUPYTER_PID" 2>/dev/null; then
+        kill -TERM "$JUPYTER_PID"
+        wait "$JUPYTER_PID" 2>/dev/null || true
+    fi
+    exit 0
+}
+
+# Set up signal handlers
+trap cleanup SIGTERM SIGINT
+
+# Check if PyTorch was compiled with CUDA support
+# This specifically checks for the "Torch not compiled with CUDA enabled" error
+if python3 -c "import torch; torch.cuda.current_device()" 2>/dev/null; then
+    echo "🔧 CUDA detected - using GPU mode"
+    # Check if sageattention is installed and available
+    if python3 -c "import sageattention" 2>/dev/null; then
+        echo "🔧 SageAttention detected - using optimized mode"
+        python3 "$COMFYUI_DIR/main.py" --listen --use-sage-attention > "$LOG_FILE" 2>&1 &
+    else
+        python3 "$COMFYUI_DIR/main.py" --listen > "$LOG_FILE" 2>&1 &
+    fi
 else
-    echo "ℹ️  SageAttention not available - using standard mode"
-    nohup python3 "$COMFYUI_DIR/main.py" --listen > "$LOG_FILE" 2>&1 &
+    echo "💻 No CUDA detected - using CPU mode"
+    python3 "$COMFYUI_DIR/main.py" --listen --cpu > "$LOG_FILE" 2>&1 &
 fi
 
 COMFYUI_PID=$!
@@ -81,6 +105,14 @@ counter=0
 max_wait=90
 
 until curl --silent --fail "$COMFYUI_URL" --output /dev/null; do
+    # Check if ComfyUI process is still running
+    if ! kill -0 "$COMFYUI_PID" 2>/dev/null; then
+        echo "❌ ComfyUI process died during startup"
+        echo "📋 Last 30 lines of log:"
+        tail -n 30 "$LOG_FILE" 2>/dev/null || echo "No log file found"
+        exit 1
+    fi
+
     if [ $counter -ge $max_wait ]; then
         echo "⚠️  ComfyUI startup timeout after ${max_wait}s"
         echo "📋 Check logs: $LOG_FILE"
@@ -106,8 +138,29 @@ if curl --silent --fail "$COMFYUI_URL" --output /dev/null; then
 else
     echo "❌ ComfyUI failed to start properly"
     echo "📋 Check logs: $LOG_FILE"
+    exit 1
 fi
 
-# Keep container running
-echo "✅ Setup complete. Container will stay running..."
-sleep infinity
+# Monitor processes and keep container alive
+echo "✅ Setup complete. Monitoring services..."
+while true; do
+    # Check if ComfyUI is still running
+    if ! kill -0 "$COMFYUI_PID" 2>/dev/null; then
+        echo "❌ ComfyUI process died unexpectedly"
+        echo "📋 Last 20 lines of log:"
+        tail -n 20 "$LOG_FILE" 2>/dev/null || echo "No log file found"
+        exit 1
+    fi
+    
+    # Check if JupyterLab is still running
+    if ! kill -0 "$JUPYTER_PID" 2>/dev/null; then
+        echo "⚠️  JupyterLab process died, restarting..."
+        jupyter-lab --ip=0.0.0.0 --allow-root --no-browser \
+            --ServerApp.token='' --ServerApp.password='' \
+            --ServerApp.allow_origin='*' --ServerApp.allow_credentials=True \
+            --notebook-dir="$COMFYUI_DIR" &
+        JUPYTER_PID=$!
+    fi
+    
+    sleep 30
+done

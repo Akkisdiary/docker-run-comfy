@@ -261,6 +261,7 @@ checkpoints/
 experiments/
 sandbox/
 test_outputs/
+workspace/
 
 # User-specific files
 user_config.*

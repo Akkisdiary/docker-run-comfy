@@ -142,11 +142,8 @@ yarn-error.log*        # Yarn error logs
 !Dockerfile             # Always include Dockerfile
 !requirements.txt       # Always include Python requirements
 !requirements.m1.txt    # Always include M1 Mac requirements
-!run-comfy-wan/         # Always include run-comfy-wan directory with scripts
-!run-comfy-wan/*.sh     # Always include all shell scripts in run-comfy-wan/
 
 # M1 Mac testing files (not needed in production image)
 docker-compose.m1.yml     # M1 Mac testing compose file
 Dockerfile.m1             # M1 Mac testing Dockerfile
-run-comfy-wan/start.m1.sh # M1 Mac startup script
-m1_volumes/               # M1 Mac development volumes
+workspace/                # M1 Mac development volumes
