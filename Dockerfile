@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 ENV PATH="/opt/venv/bin:$PATH"
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install torch==2.4.0+cu128 torchvision==0.19.0+cu128 torchaudio==2.4.0+cu128 \
+    pip install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
         --index-url https://download.pytorch.org/whl/cu128
 
 # Core Python tooling
@@ -34,9 +34,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 # Runtime libraries and Jupyter
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install pyyaml gdown triton comfy-cli jupyterlab jupyterlab-lsp \
+    pip install comfy-cli jupyterlab jupyterlab-lsp \
         jupyter-server jupyter-server-terminals \
-        ipykernel jupyterlab_code_formatter
+        ipykernel
 
 # ------------------------------------------------------------
 # ComfyUI install
