@@ -36,14 +36,28 @@ fi
 echo "📋 Step 4: Finalizing SageAttention Installation"
 wait_for_sageattention
 
-# Step 5: Start Services (JupyterLab and ComfyUI)
-echo "📋 Step 5: Starting Services"
-source "$SCRIPT_DIR/start_services.sh"
+# Step 5: Start JupyterLab (immediate access)
+echo "📋 Step 5: Starting JupyterLab"
+source "$SCRIPT_DIR/start_jupyter.sh"
 if [ $? -ne 0 ]; then
-    echo "❌ Services startup failed"
+    echo "❌ JupyterLab startup failed"
     exit 1
 fi
 
-# Step 6: Monitor Services
-echo "📋 Step 6: Service Monitoring"
+# Step 6: Start ComfyUI (in background for parallel startup)
+echo "📋 Step 6: Starting ComfyUI"
+source "$SCRIPT_DIR/start_comfyui.sh" &
+COMFYUI_STARTUP_PID=$!
+echo "📦 ComfyUI startup running in background (PID: $COMFYUI_STARTUP_PID)"
+
+# Wait for ComfyUI startup to complete
+echo "⏳ Waiting for ComfyUI startup to complete..."
+wait $COMFYUI_STARTUP_PID
+if [ $? -ne 0 ]; then
+    echo "❌ ComfyUI startup failed"
+    exit 1
+fi
+
+# Step 7: Monitor Services
+echo "📋 Step 7: Service Monitoring"
 source "$SCRIPT_DIR/monitor_services.sh"
