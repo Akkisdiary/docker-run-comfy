@@ -22,13 +22,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Free up disk space
+      - name: Free up disk space (fast)
         run: |
-          sudo rm -rf /usr/share/dotnet
-          sudo rm -rf /usr/local/lib/android
-          sudo rm -rf /opt/ghc
-          sudo rm -rf /opt/hostedtoolcache/CodeQL
-          sudo docker image prune --all --force
+          # Only remove the largest directories in parallel
+          sudo rm -rf /usr/share/dotnet &
+          sudo rm -rf /usr/local/lib/android &
+          sudo rm -rf /opt/ghc &
+          wait
+          # Quick docker cleanup
+          docker system prune -af --volumes
           df -h
         
       - name: Set up Docker Buildx
