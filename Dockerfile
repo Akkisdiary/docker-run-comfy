@@ -52,4 +52,4 @@ WORKDIR /scripts
 COPY scripts/ .
 RUN chmod +x start_script.sh
 
-CMD ["start_script.sh"]
+CMD ["./start_script.sh"]

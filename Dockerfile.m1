@@ -55,4 +55,4 @@ RUN chmod +x start_script.sh
 # Expose ports
 EXPOSE 8188 8888
 
-CMD ["start_script.sh"]
+CMD ["./start_script.sh"]
