@@ -3,7 +3,7 @@
 # Custom Nodes Installation Script for ComfyUI
 # This script installs custom nodes from git repositories with automatic dependency handling
 
-set -e
+set -e  # Exit on any error
 
 echo "🔧 ComfyUI Custom Nodes Installation Script"
 echo "============================================="
@@ -42,7 +42,8 @@ install_custom_node() {
     echo "   📥 Cloning repository..."
     if ! git clone "$repo_url" "$node_dir"; then
         echo "   ❌ Failed to clone $repo_url"
-        return 1
+        echo "   🚨 This is a critical error - failing build"
+        exit 1
     fi
     
     cd "$node_dir"
@@ -53,7 +54,9 @@ install_custom_node() {
         if python install.py; then
             echo "   ✅ install.py completed successfully"
         else
-            echo "   ⚠️  install.py failed, continuing anyway..."
+            echo "   ❌ install.py failed for $repo_name"
+            echo "   🚨 This is a critical error - failing build"
+            exit 1
         fi
     fi
     
@@ -63,7 +66,9 @@ install_custom_node() {
         if pip install -r requirements.txt; then
             echo "   ✅ requirements.txt installed successfully"
         else
-            echo "   ⚠️  requirements.txt installation failed, continuing anyway..."
+            echo "   ❌ requirements.txt installation failed for $repo_name"
+            echo "   🚨 This is a critical error - failing build"
+            exit 1
         fi
     fi
     
@@ -85,7 +90,9 @@ install_custom_node() {
         if python setup.py install; then
             echo "   ✅ setup.py completed successfully"
         else
-            echo "   ⚠️  setup.py failed, continuing anyway..."
+            echo "   ❌ setup.py failed for $repo_name"
+            echo "   🚨 This is a critical error - failing build"
+            exit 1
         fi
     fi
     
@@ -100,14 +107,16 @@ install_custom_node() {
             if pip install . 2>/dev/null; then
                 echo "   ✅ pip install (non-editable) completed successfully"
             else
-                echo "   ⚠️  pip install failed, continuing anyway..."
+                echo "   ❌ pip install failed for $repo_name"
+                echo "   🚨 This is a critical error - failing build"
+                exit 1
             fi
         fi
     fi
     
     echo "   ✅ $repo_name installation completed"
     cd - > /dev/null
-    return 0  # Always return success to continue with other nodes
+    return 0
 }
 
 # Main installation function
@@ -179,21 +188,18 @@ main() {
         echo "   Continuing anyway in case ComfyUI is installed elsewhere..."
     fi
     
-    # Install all custom nodes (always continue even if some fail)
-    install_all_custom_nodes || true
+    # Install all custom nodes (fail on any critical error)
+    install_all_custom_nodes
     
     # Clean up any failed installations
-    cleanup_failed_installs || true
+    cleanup_failed_installs
     
     # List what was installed
-    list_installed_nodes || true
+    list_installed_nodes
     
     echo ""
     echo "✅ Custom nodes installation completed at: $(date)"
     echo "🚀 ComfyUI setup finished!"
-    
-    # Always exit with success to not fail Docker build
-    exit 0
 }
 
 # Run main function if script is executed directly
