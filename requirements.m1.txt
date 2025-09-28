@@ -1,0 +1,71 @@
+# =============================================================================
+# ComfyUI M1 Mac Requirements - CPU Mode
+# =============================================================================
+# Purpose: Dependencies for running ComfyUI on M1 Mac without CUDA
+# Target: Local M1/M2 Mac development and testing
+
+# =============================================================================
+# CORE PYTORCH ECOSYSTEM - CPU ONLY
+# =============================================================================
+# CPU-only PyTorch for Apple Silicon compatibility
+torch>=2.1.0
+torchvision>=0.16.0
+torchaudio>=2.1.0
+
+# =============================================================================
+# ESSENTIAL COMFYUI PACKAGES
+# =============================================================================
+# Transformer Models
+transformers>=4.35.0
+
+# Diffusion Models
+diffusers>=0.21.0
+
+# Training & Inference Acceleration
+accelerate>=0.24.0
+
+# Model Storage
+safetensors>=0.4.0
+
+# =============================================================================
+# IMAGE & NUMERICAL PROCESSING
+# =============================================================================
+# Core numerical computing
+numpy>=1.24.0
+
+# Image processing
+pillow>=10.0.0
+opencv-python>=4.8.0
+
+# Scientific computing
+scipy>=1.11.0
+
+# =============================================================================
+# MODEL MANAGEMENT & UTILITIES
+# =============================================================================
+# Hugging Face Hub
+huggingface-hub>=0.35.1
+
+# HTTP requests
+requests>=2.32.5
+
+# Progress bars
+tqdm>=4.66.0
+
+# Data validation
+pydantic>=2.0.0
+
+# =============================================================================
+# COMFYUI MANAGEMENT TOOLS
+# =============================================================================
+# Official ComfyUI CLI
+comfy-cli==1.5.1
+
+# =============================================================================
+# DEVELOPMENT & ANALYSIS TOOLS
+# =============================================================================
+# Jupyter Environment
+jupyterlab==4.4.9
+
+# Enhanced Interactive Python
+ipython>=9.5.0

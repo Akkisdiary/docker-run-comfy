@@ -1,0 +1,59 @@
+# Docker Compose for M1 Mac Testing
+version: '3.8'
+
+services:
+  run-comfy-wan:
+    build:
+      context: .
+      dockerfile: Dockerfile.m1
+    
+    container_name: run-comfy-wan
+    hostname: run-comfy-wan
+    
+    # Environment variables for M1 Mac testing
+    environment:
+      - PYTHONUNBUFFERED=1
+      - TRANSFORMERS_CACHE=/workspace/cache/transformers
+      # API Tokens (set these in your M1 Mac environment or .env file)
+      - HF_TOKEN=${HF_TOKEN:-}
+      - CIVITAI_TOKEN=${CIVITAI_TOKEN:-}
+    
+    # Port mapping for M1 Mac access
+    ports:
+      - "8188:8188"                 # ComfyUI web interface
+      - "8888:8888"                 # Jupyter notebook server
+    
+    # Volume mounts for M1 Mac development
+    volumes:
+      # Persist models and outputs on M1 Mac
+      - ./m1_volumes/models:/workspace/ComfyUI/models
+      - ./m1_volumes/input:/workspace/ComfyUI/input
+      - ./m1_volumes/output:/workspace/ComfyUI/output
+      - ./m1_volumes/cache:/workspace/cache
+      - ./m1_volumes/logs:/workspace/logs
+    
+    # Resource limits appropriate for M1 Mac testing
+    deploy:
+      resources:
+        limits:
+          memory: 8G
+        reservations:
+          memory: 2G
+    
+    # Health check for M1 Mac testing
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8188/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 60s
+    
+    # Restart policy
+    restart: unless-stopped
+    
+    # Logging configuration
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "50m"
+        max-file: "2"

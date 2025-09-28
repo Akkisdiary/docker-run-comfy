@@ -1,0 +1,122 @@
+# =============================================================================
+# M1 Mac Testing Dockerfile - Multi-Stage Build
+# =============================================================================
+# Purpose: Test ComfyUI setup on Apple Silicon without CUDA dependencies
+# Architecture: Multi-stage build for optimized M1 Mac testing
+# Target: Local M1/M2 Mac development and testing
+# =============================================================================
+
+# =============================================================================
+# STAGE 1: BUILD ENVIRONMENT
+# =============================================================================
+# This stage handles all build-time dependencies, ComfyUI installation, and Jupyter setup
+FROM python:3.11-slim AS builder
+
+# Build Environment Variables:
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+# Working Directory:
+WORKDIR /build
+
+# Install Build Dependencies:
+# Install essential build tools and development packages
+RUN apt-get update && apt-get install -y \
+    git \
+    wget \
+    curl \
+    unzip \
+    build-essential \
+    libgl1-mesa-dev \
+    libglib2.0-dev \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy and Install Python Dependencies:
+# Install all Python packages needed for M1 Mac CPU-only ComfyUI
+COPY requirements.m1.txt ./
+RUN pip install --no-cache-dir -r requirements.m1.txt
+
+# Install ComfyUI using CLI (comfy-cli already installed via requirements.m1.txt)
+RUN comfy --workspace /build/ComfyUI --skip-prompt install --version latest --cpu
+
+# Verify installations
+RUN ls -la /build/ComfyUI && echo "ComfyUI installation verified" \
+    && jupyter --version && echo "Jupyter installation verified"
+
+# =============================================================================
+# STAGE 2: RUNTIME ENVIRONMENT
+# =============================================================================
+# Lightweight runtime stage optimized for M1 Mac CPU execution
+FROM python:3.11-slim AS runtime
+
+# Runtime Environment Variables:
+ENV DEBIAN_FRONTEND=noninteractive
+ENV PYTHONUNBUFFERED=1
+
+# Working Directory:
+WORKDIR /workspace
+
+# Install Minimal Runtime Dependencies:
+# Only install what's needed for runtime execution
+RUN apt-get update && apt-get install -y \
+    curl \
+    libgl1-mesa-dri \
+    libglib2.0-0 \
+    ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy Python Environment from Builder:
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
+
+# Copy ComfyUI Installation from Builder:
+COPY --from=builder /build/ComfyUI /workspace/ComfyUI
+
+# Copy Runtime Scripts:
+COPY run-comfy-wan/ /workspace/run-comfy-wan/
+RUN chmod +x /workspace/run-comfy-wan/*.sh
+
+# Create Directory Structure:
+RUN mkdir -p /workspace/ComfyUI/models/checkpoints \
+    && mkdir -p /workspace/ComfyUI/models/vae \
+    && mkdir -p /workspace/ComfyUI/models/loras \
+    && mkdir -p /workspace/ComfyUI/models/controlnet \
+    && mkdir -p /workspace/ComfyUI/models/diffusers \
+    && mkdir -p /workspace/ComfyUI/custom_nodes \
+    && mkdir -p /workspace/ComfyUI/input \
+    && mkdir -p /workspace/ComfyUI/output \
+    && mkdir -p /workspace/logs \
+    && ln -sf /workspace/ComfyUI/models /workspace/models \
+    && ln -sf /workspace/ComfyUI/input /workspace/input \
+    && ln -sf /workspace/ComfyUI/output /workspace/output
+
+# Model Caching Configuration:
+ENV TRANSFORMERS_CACHE=/workspace/cache/transformers
+ENV HF_HOME=/workspace/cache/huggingface
+RUN mkdir -p $TRANSFORMERS_CACHE $HF_HOME
+
+# API Token Configuration:
+ENV HF_TOKEN=""
+ENV CIVITAI_TOKEN=""
+
+# Set Permissions:
+RUN chmod -R 755 /workspace/ComfyUI \
+    && chown -R root:root /workspace
+
+# Expose Ports:
+EXPOSE 8188 8888
+
+# Container Startup Command:
+# The start script will handle all service initialization
+CMD ["/workspace/run-comfy-wan/start.m1.sh"]
+
+# =============================================================================
+# MULTI-STAGE BUILD BENEFITS FOR M1 MAC
+# =============================================================================
+# Benefits of this multi-stage approach:
+# 1. Smaller final image size (no build tools in runtime)
+# 2. Faster startup times on M1 Mac
+# 3. Better resource utilization for CPU-only execution
+# 4. Cleaner separation of build and runtime concerns
+# 5. Optimized for Apple Silicon architecture

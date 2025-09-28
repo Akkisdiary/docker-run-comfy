@@ -1,0 +1,267 @@
+# =============================================================================
+# ComfyUI RunPod Template - Git Ignore Rules
+# =============================================================================
+# Purpose: Exclude runtime files, large models, and development artifacts from git
+# Note: This prevents large files from being committed and keeps repo clean
+
+# =============================================================================
+# PYTHON & VIRTUAL ENVIRONMENTS
+# =============================================================================
+# Python bytecode and cache files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# Virtual environments
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+.venv/
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# =============================================================================
+# COMFYUI RUNTIME FILES & VOLUMES
+# =============================================================================
+# Local development volumes (contains models, cache, logs, etc.)
+local_volumes/
+m1_volumes/
+
+# ComfyUI generated files
+ComfyUI/
+comfyui/
+models/
+custom_nodes/
+input/
+output/
+temp/
+
+# Model files (these can be very large)
+*.ckpt
+*.safetensors
+*.bin
+*.pth
+*.pt
+*.onnx
+*.trt
+
+# Cache directories
+cache/
+.cache/
+huggingface/
+transformers_cache/
+
+# Log files
+*.log
+logs/
+*.out
+
+# =============================================================================
+# DOCKER & CONTAINERIZATION
+# =============================================================================
+# Docker build context exclusions (handled by .dockerignore, but good to have)
+.dockerignore.bak
+
+# =============================================================================
+# DEVELOPMENT TOOLS & IDEs
+# =============================================================================
+# VS Code
+.vscode/
+*.code-workspace
+
+# PyCharm
+.idea/
+*.iws
+*.iml
+*.ipr
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+*.ipynb
+
+# Spyder
+.spyderproject
+.spyproject
+
+# Rope
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# =============================================================================
+# SYSTEM & TEMPORARY FILES
+# =============================================================================
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.DocumentRevisions-V100
+.fseventsd
+.Spotlight-V100
+.TemporaryItems
+.Trashes
+.VolumeIcon.icns
+.com.apple.timemachine.donotpresent
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+.apdisk
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+*.tmp
+*.temp
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+.Trash-*
+.nfs*
+
+# =============================================================================
+# ENVIRONMENT & CONFIGURATION
+# =============================================================================
+# Environment variables (keep .env.example, ignore actual .env)
+.env
+.env.local
+.env.*.local
+
+# Configuration overrides
+config.local.*
+settings.local.*
+
+# =============================================================================
+# BACKUP & TEMPORARY FILES
+# =============================================================================
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.save
+*.swp
+*.swo
+*~
+
+# Temporary files
+tmp/
+temp/
+.tmp/
+
+# =============================================================================
+# PACKAGE MANAGERS & DEPENDENCIES
+# =============================================================================
+# npm
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# UV package manager
+.uv/
+
+# pip
+pip-log.txt
+pip-delete-this-directory.txt
+
+# =============================================================================
+# SECURITY & SENSITIVE DATA
+# =============================================================================
+# API keys and tokens
+*.key
+*.pem
+*.p12
+*.pfx
+secrets/
+.secrets/
+
+# SSH keys
+id_rsa
+id_dsa
+id_ecdsa
+id_ed25519
+
+# =============================================================================
+# PROJECT SPECIFIC EXCLUSIONS
+# =============================================================================
+# Large model downloads
+downloads/
+pretrained/
+checkpoints/
+
+# Experimental files
+experiments/
+sandbox/
+test_outputs/
+
+# User-specific files
+user_config.*
+personal_*
