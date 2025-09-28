@@ -28,19 +28,19 @@ mkdir -p "$NETWORK_VOLUME"
 
 # Handle ComfyUI installation based on network volume state
 if [ ! -f "$COMFYUI_DIR/main.py" ]; then
-    echo "📦 ComfyUI not found in network volume, copying from container..."
+    echo "📦 ComfyUI not found in $NETWORK_VOLUME, copying from container..."
     if [ -d "/ComfyUI" ] && [ -f "/ComfyUI/main.py" ]; then
         # Copy entire ComfyUI installation to network volume
         echo "📁 Copying ComfyUI installation..."
         cp -r /ComfyUI "$COMFYUI_DIR"
         
-        echo "✅ ComfyUI copied to network volume for persistence"
+        echo "✅ ComfyUI copied to $NETWORK_VOLUME"
     else
         echo "❌ ComfyUI not found in container at /ComfyUI"
         exit 1
     fi
 else
-    echo "✅ ComfyUI found in network volume, using existing installation"
+    echo "✅ ComfyUI found in $NETWORK_VOLUME, using existing installation"
 fi
 
 # Create additional cache directories
@@ -52,7 +52,7 @@ echo "📓 Starting JupyterLab server..."
 jupyter-lab --ip=0.0.0.0 --allow-root --no-browser \
     --ServerApp.token='' --ServerApp.password='' \
     --ServerApp.allow_origin='*' --ServerApp.allow_credentials=True \
-    --notebook-dir="$COMFYUI_DIR" &
+    --notebook-dir="/" &
 
 JUPYTER_PID=$!
 echo "✅ JupyterLab started (PID: $JUPYTER_PID)"
