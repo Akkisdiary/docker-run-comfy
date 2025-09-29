@@ -15,10 +15,12 @@ MODELS_DIR="$NETWORK_VOLUME/ComfyUI/models"
 mkdir -p "$MODELS_DIR/clip"
 mkdir -p "$MODELS_DIR/loras"
 mkdir -p "$MODELS_DIR/unet"
+mkdir -p "$MODELS_DIR/vae"
 
 CLIPS_DIR="$MODELS_DIR/clip"
 LORAS_DIR="$MODELS_DIR/loras"
 UNETS_DIR="$MODELS_DIR/unet"
+VAES_DIR="$MODELS_DIR/vae"
 
 # Function to download models in parallel
 download_models() {
@@ -28,47 +30,45 @@ download_models() {
     local pids=()
     
     # UNet models
-    echo "📦 Starting UNet model downloads..."
-    (
-        echo "🔧 Downloading Wan2.2 HighNoise UNet..."
-        download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" "$UNETS_DIR"
-    ) &
+    download_hf \
+        "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" \
+        "$UNETS_DIR" &
     pids+=($!)
     
-    (
-        echo "🔧 Downloading Wan2.2 LowNoise UNet..."
-        download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR"
-    ) &
+    download_hf \
+        "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" \
+        "$UNETS_DIR" &
     pids+=($!)
     
     # LoRA models
-    echo "📦 Starting LoRA model downloads..."
-    (
-        echo "🔧 Downloading Wan21 T2V LoRA..."
-        download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR"
-    ) &
+    download_hf \
+        "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" \
+        "$LORAS_DIR" &
     pids+=($!)
     
-    (
-        echo "🔧 Downloading CivitAI LoRA 1..."
-        download_civitai "2066914" "$LORAS_DIR"
-    ) &
+    download_civitai "2066914" "$LORAS_DIR" &
     pids+=($!)
     
-    (
-        echo "🔧 Downloading CivitAI LoRA 2..."
-        download_civitai "2086717" "$LORAS_DIR"
-    ) &
+    download_civitai "2086717" "$LORAS_DIR" &
     pids+=($!)
     
     # CLIP model
-    echo "📦 Starting CLIP model download..."
-    (
-        echo "🔧 Downloading UMT5 CLIP model..."
-        download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR"
-    ) &
+    download_hf \
+        "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" \
+        "$CLIPS_DIR" &
     pids+=($!)
     
+    # VAE model
+    download_hf \
+        "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" \
+        "$VAES_DIR" &
+    pids+=($!)
+ 
+    download_hf \
+        "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" \
+        "$VAES_DIR" &
+    pids+=($!)
+   
     # Store PIDs for monitoring
     export MODEL_DOWNLOAD_PIDS="${pids[*]}"
     echo "📊 Started ${#pids[@]} parallel downloads (PIDs: ${pids[*]})"

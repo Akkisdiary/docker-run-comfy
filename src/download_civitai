@@ -87,7 +87,7 @@ download_civitai() {
     fi
     
     # Build aria2c command without auth headers for the final URL
-    local aria2_cmd="aria2c -x 16 -s 16 -k 1M -o \"$filename\""
+    local aria2_cmd="aria2c -x 16 -s 16 -k 1M --download-result=hide --summary-interval=0 -console-log-level=error -o \"$filename\""
     aria2_cmd="$aria2_cmd --user-agent=\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\""
     aria2_cmd="$aria2_cmd --header=\"Accept: */*\""
     aria2_cmd="$aria2_cmd --max-tries=3 --retry-wait=5"
@@ -103,21 +103,10 @@ download_civitai() {
         if [[ "$filename" == *.zip ]]; then
             echo "📦 Detected zip file, extracting contents..."
             
-            # Create extraction directory
-            local extract_dir="${filename%.*}_extracted"
-            mkdir -p "$extract_dir"
-            
             # Extract zip file
-            if unzip -q "$filename" -d "$extract_dir"; then
+            if unzip -q "$filename" -d "."; then
                 echo "✅ Successfully extracted: $filename"
-                echo "📁 Contents extracted to: $extract_dir/"
                 
-                # List extracted contents
-                echo "📋 Extracted files:"
-                ls -la "$extract_dir/"
-                
-                # Optionally remove the zip file after extraction
-                # Uncomment the next line if you want to delete zip files after extraction
                 # rm "$filename" && echo "🗑️  Removed original zip file: $filename"
             else
                 echo "❌ Failed to extract zip file: $filename"

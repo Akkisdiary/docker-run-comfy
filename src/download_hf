@@ -30,7 +30,8 @@ download_huggingface() {
     
     # Use aria2 for direct URL download (faster and more reliable)
     cd "$target_dir"
-    aria2c -x 16 -s 16 -k 1M -o "$filename" "$download_url"
+    aria2c -x 16 -s 16 -k 1M --download-result=hide --summary-interval=0 -console-log-level=error \
+        -o "$filename" "$download_url"
     
     if [ $? -eq 0 ]; then
         echo "✅ HuggingFace download completed for $download_url"
