@@ -58,16 +58,8 @@ download_civitai() {
     
     local target_file="$target_dir/$filename"
     
-    # Check if file already exists
-    if [ -f "$target_file" ]; then
-        echo "✅ File already exists, skipping download: $filename"
-        return 0
-    fi
     echo "📥 Downloading: $filename"
     echo "🔗 URL: $download_url"
-    
-    # Download with aria2 for better performance
-    cd "$target_dir"
     
     # Get the actual download URL by following redirects with curl first
     echo "🔄 Resolving download URL..."
@@ -87,7 +79,7 @@ download_civitai() {
     fi
     
     # Build aria2c command without auth headers for the final URL
-    local aria2_cmd="aria2c -x 16 -s 16 -k 1M --download-result=hide --summary-interval=0 -console-log-level=error -o \"$filename\""
+    local aria2_cmd="aria2c -x 16 -s 16 -k 1M -d \"$target_dir\" -o \"$filename\""
     aria2_cmd="$aria2_cmd --user-agent=\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\""
     aria2_cmd="$aria2_cmd --header=\"Accept: */*\""
     aria2_cmd="$aria2_cmd --max-tries=3 --retry-wait=5"
@@ -103,11 +95,13 @@ download_civitai() {
         if [[ "$filename" == *.zip ]]; then
             echo "📦 Detected zip file, extracting contents..."
             
-            # Extract zip file
-            if unzip -q "$filename" -d "."; then
+            # Extract zip file to the same directory
+            if unzip -q "$target_file" -d "$target_dir"; then
                 echo "✅ Successfully extracted: $filename"
                 
-                # rm "$filename" && echo "🗑️  Removed original zip file: $filename"
+                # Optionally remove the zip file after extraction
+                # Uncomment the next line if you want to delete zip files after extraction
+                # rm "$target_file" && echo "🗑️  Removed original zip file: $filename"
             else
                 echo "❌ Failed to extract zip file: $filename"
                 echo "⚠️  Keeping original zip file"
