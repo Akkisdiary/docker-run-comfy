@@ -76,14 +76,10 @@ download_civitai() {
         echo "✅ Resolved final URL: ${final_url:0:100}..."
     fi
     
-    # Build aria2c command without auth headers for the final URL
-    local aria2_cmd="aria2c -x 16 -s 16 -k 1M -d \"$target_dir\" -o \"$filename\""
-    aria2_cmd="$aria2_cmd --user-agent=\"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36\""
-    aria2_cmd="$aria2_cmd --header=\"Accept: */*\""
-    aria2_cmd="$aria2_cmd --max-tries=3 --retry-wait=5"
-    aria2_cmd="$aria2_cmd \"$final_url\""
-    
-    eval "$aria2_cmd"
+    aria2c -x 16 -s 16 -k 1M -d "$target_dir" -o "$filename" \
+        --auto-file-renaming=false --continue=true \
+        "$final_url"
+
     local download_exit_code=$?
     
     if [ $download_exit_code -eq 0 ]; then

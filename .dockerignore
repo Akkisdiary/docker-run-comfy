@@ -147,3 +147,4 @@ yarn-error.log*        # Yarn error logs
 docker-compose.m1.yml     # M1 Mac testing compose file
 Dockerfile.m1             # M1 Mac testing Dockerfile
 workspace/                # M1 Mac development volumes
+cache/                    # M1 Mac development volumes

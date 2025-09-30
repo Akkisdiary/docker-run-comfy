@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Default Models Download Script
-# Downloads essential models for ComfyUI in parallel
-
 set +e  # Don't exit on errors
 
 echo "📥 Starting default models download..."
@@ -10,40 +7,32 @@ echo "📥 Starting default models download..."
 # Use environment variables
 NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}"
 MODELS_DIR="$NETWORK_VOLUME/ComfyUI/models"
-
-# Create models directory structure
-mkdir -p "$MODELS_DIR/clip"
-mkdir -p "$MODELS_DIR/loras"
-mkdir -p "$MODELS_DIR/unet"
-mkdir -p "$MODELS_DIR/vae"
-
 CLIPS_DIR="$MODELS_DIR/clip"
 LORAS_DIR="$MODELS_DIR/loras"
 UNETS_DIR="$MODELS_DIR/unet"
 VAES_DIR="$MODELS_DIR/vae"
 
-# Function to download models in parallel
+mkdir -p "$CLIPS_DIR"
+mkdir -p "$LORAS_DIR"
+mkdir -p "$UNETS_DIR"
+mkdir -p "$VAES_DIR"
+
 download_models() {
     echo "🚀 Starting parallel model downloads..."
     
-    # Array to store background process IDs
     local pids=()
     
-    # UNet models
-    download_hf \
-        "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" \
-        "$UNETS_DIR" &
+    # Wan 2.2 GGUF
+
+    # CLIP
+    download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" "$UNETS_DIR" &
     pids+=($!)
     
-    download_hf \
-        "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" \
-        "$UNETS_DIR" &
+    download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR" &
     pids+=($!)
     
     # LoRA models
-    download_hf \
-        "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" \
-        "$LORAS_DIR" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR" &
     pids+=($!)
     
     download_civitai "2066914" "$LORAS_DIR" &
@@ -53,28 +42,20 @@ download_models() {
     pids+=($!)
     
     # CLIP model
-    download_hf \
-        "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" \
-        "$CLIPS_DIR" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR" &
     pids+=($!)
     
     # VAE model
-    download_hf \
-        "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" \
-        "$VAES_DIR" &
+    download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR" &
     pids+=($!)
  
-    download_hf \
-        "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" \
-        "$VAES_DIR" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR" &
     pids+=($!)
    
-    # Store PIDs for monitoring
     export MODEL_DOWNLOAD_PIDS="${pids[*]}"
     echo "📊 Started ${#pids[@]} parallel downloads (PIDs: ${pids[*]})"
 }
 
-# Function to wait for all downloads to complete
 wait_for_downloads() {
     if [ -n "$MODEL_DOWNLOAD_PIDS" ]; then
         echo "⏳ Waiting for model downloads to complete..."

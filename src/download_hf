@@ -8,13 +8,14 @@ set +e  # Don't exit on errors
 # Function to download from HuggingFace
 download_huggingface() {
     local download_url="$1"
-    local target_dir="${2:-.}"
+    local target_file_path="$2"
     
-    # Extract filename from URL
-    local filename=$(basename "$download_url")
+    # Extract directory and filename from target path
+    local target_dir=$(dirname "$target_file_path")
+    local filename=$(basename "$target_file_path")
     
     echo "🤗 Downloading HuggingFace model: $filename"
-    echo "📁 Target directory: $target_dir"
+    echo "📁 Target file: $target_file_path"
     echo "📥 URL: $download_url"
     
     # Create target directory if it doesn't exist
@@ -23,7 +24,7 @@ download_huggingface() {
     # Use aria2 for direct URL download (faster and more reliable)
     aria2c -x 16 -s 16 -k 1M -d "$target_dir" -o "$filename" \
         --max-tries=3 --retry-wait=5 \
-        --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" \
+        --auto-file-renaming=false --continue=true \
         "$download_url"
     
     if [ $? -eq 0 ]; then
