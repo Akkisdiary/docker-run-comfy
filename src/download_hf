@@ -12,26 +12,19 @@ download_huggingface() {
     
     # Extract filename from URL
     local filename=$(basename "$download_url")
-    local target_file="$target_dir/$filename"
     
-    echo "🤗 Checking HuggingFace model: $filename"
+    echo "🤗 Downloading HuggingFace model: $filename"
     echo "📁 Target directory: $target_dir"
-    
-    # Check if file already exists
-    if [ -f "$target_file" ]; then
-        echo "✅ File already exists, skipping download: $filename"
-        return 0
-    fi
-    
-    echo "📥 Downloading from HuggingFace URL: $download_url"
+    echo "📥 URL: $download_url"
     
     # Create target directory if it doesn't exist
     mkdir -p "$target_dir"
     
     # Use aria2 for direct URL download (faster and more reliable)
-    cd "$target_dir"
-    aria2c -x 16 -s 16 -k 1M --download-result=hide --summary-interval=0 -console-log-level=error \
-        -o "$filename" "$download_url"
+    aria2c -x 16 -s 16 -k 1M -d "$target_dir" -o "$filename" \
+        --max-tries=3 --retry-wait=5 \
+        --user-agent="Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36" \
+        "$download_url"
     
     if [ $? -eq 0 ]; then
         echo "✅ HuggingFace download completed for $download_url"
