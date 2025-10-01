@@ -4,6 +4,13 @@ set +e  # Don't exit on errors
 
 echo "📥 Starting default models download..."
 
+# Get script directory for sourcing other scripts
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# Source download functions
+source "$SCRIPT_DIR/download_hf"
+source "$SCRIPT_DIR/download_civitai"
+
 # Use environment variables
 NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}"
 MODELS_DIR="$NETWORK_VOLUME/ComfyUI/models"
@@ -22,17 +29,15 @@ download_models() {
     
     local pids=()
     
-    # Wan 2.2 GGUF
-
-    # CLIP
-    download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" "$UNETS_DIR" &
+    # Wan 2.2 GGUF UNet models
+    download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" &
     pids+=($!)
     
-    download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR" &
+    download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" &
     pids+=($!)
     
     # LoRA models
-    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" &
     pids+=($!)
     
     download_civitai "2066914" "$LORAS_DIR" &
@@ -42,14 +47,14 @@ download_models() {
     pids+=($!)
     
     # CLIP model
-    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
     pids+=($!)
     
-    # VAE model
-    download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR" &
+    # VAE models
+    download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR/Wan2.1_VAE.pth" &
     pids+=($!)
  
-    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
     pids+=($!)
    
     export MODEL_DOWNLOAD_PIDS="${pids[*]}"
