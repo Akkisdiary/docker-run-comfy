@@ -49,6 +49,10 @@ RUN --mount=type=cache,target=/root/.cache/pip \
         https://github.com/city96/ComfyUI-GGUF \
         https://github.com/ClownsharkBatwing/RES4LYF \
         https://github.com/giriss/comfy-image-saver \
+        https://github.com/kijai/ComfyUI-KJNodes \
+        https://github.com/orssorbit/ComfyUI-wanBlockswap \
+        https://github.com/ltdrdata/was-node-suite-comfyui \
+        https://github.com/chibiace/ComfyUI-Chibi-Nodes \
     ; do \
         cd /ComfyUI/custom_nodes; \
         repo_dir=$(basename "$repo" .git); \
