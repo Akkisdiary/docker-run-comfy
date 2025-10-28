@@ -2,12 +2,7 @@ name: Docker Build
 
 on:
   push:
-    branches: [ main, master ]
-    paths:
-      - 'Dockerfile'
-      - 'Dockerfile.m1'
-      - 'src/**'
-      - '.github/workflows/docker-build.yml'
+    branches: [ main ]
   workflow_dispatch:
 
 env:
