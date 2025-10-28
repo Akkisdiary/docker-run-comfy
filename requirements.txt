@@ -1,0 +1,10 @@
+comfy-cli
+jupyterlab
+jupyterlab-lsp
+jupyter-server
+jupyter-server-terminals
+ipykernel
+huggingface-hub
+opencv-python
+dlib
+insightface==0.7.3
