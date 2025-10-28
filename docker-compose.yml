@@ -11,7 +11,7 @@ services:
       - HF_TOKEN=${HF_TOKEN:-}
       - CIVITAI_TOKEN=${CIVITAI_TOKEN:-}
       - DOWNLOAD_WAN22=false
-      - DOWNLOAD_FLUX=false
+      - DOWNLOAD_FLUX_FP8=false
       - DOWNLOAD_FLUX_KONTEXT=false
     
     ports:
