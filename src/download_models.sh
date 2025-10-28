@@ -1,123 +1,78 @@
 #!/bin/bash
 
-set +e  # Don't exit on errors
+set -e
 
-echo "📥 Starting default models download..."
-
-# Get script directory for sourcing other scripts
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-
-# Source download functions
-source "$SCRIPT_DIR/download_hf"
-source "$SCRIPT_DIR/download_civitai"
-
-# Use environment variables
-NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}"
-MODELS_DIR="$NETWORK_VOLUME/ComfyUI/models"
+MODELS_DIR="/ComfyUI/models"
+DIFFUSION_MODELS_DIR="$MODELS_DIR/diffusion_models"
+TEXT_ENCODERS_DIR="$MODELS_DIR/text_encoders"
 CLIPS_DIR="$MODELS_DIR/clip"
 LORAS_DIR="$MODELS_DIR/loras"
 UNETS_DIR="$MODELS_DIR/unet"
 VAES_DIR="$MODELS_DIR/vae"
+UPSCALE_MODELS_DIR="$MODELS_DIR/upscale_models"
 
+mkdir -p "$DIFFUSION_MODELS_DIR"
+mkdir -p "$TEXT_ENCODERS_DIR"
 mkdir -p "$CLIPS_DIR"
 mkdir -p "$LORAS_DIR"
 mkdir -p "$UNETS_DIR"
 mkdir -p "$VAES_DIR"
+mkdir -p "$UPSCALE_MODELS_DIR"
 
-download_models() {
-    echo "🚀 Starting parallel model downloads..."
-    
-    local pids=()
-    
-    # Wan 2.2 GGUF UNet models
+echo "🚀 Starting parallel model downloads..."
+
+if [ "$DOWNLOAD_WAN22" == "true" ]; then
+    echo "Downloading WAN22 models..."
     download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" &
-    pids+=($!)
-    
     download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" &
-    pids+=($!)
-    
-    # LoRA models
     download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" &
-    pids+=($!)
-    
-    download_civitai "2066914" "$LORAS_DIR" &
-    pids+=($!)
-    
-    download_civitai "2086717" "$LORAS_DIR" &
-    pids+=($!)
-    
-    # CLIP model
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
-    pids+=($!)
-    
-    # VAE models
     download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR/Wan2.1_VAE.pth" &
-    pids+=($!)
- 
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
-    pids+=($!)
-   
-    export MODEL_DOWNLOAD_PIDS="${pids[*]}"
-    echo "📊 Started ${#pids[@]} parallel downloads (PIDs: ${pids[*]})"
-}
-
-wait_for_downloads() {
-    if [ -n "$MODEL_DOWNLOAD_PIDS" ]; then
-        echo "⏳ Waiting for model downloads to complete..."
-        local pids=($MODEL_DOWNLOAD_PIDS)
-        local completed=0
-        local failed=0
-        
-        for pid in "${pids[@]}"; do
-            if wait $pid 2>/dev/null; then
-                ((completed++))
-                echo "✅ Download process $pid completed successfully"
-            else
-                ((failed++))
-                echo "❌ Download process $pid failed"
-            fi
-        done
-        
-        echo "📊 Download Summary:"
-        echo "   ✅ Completed: $completed"
-        echo "   ❌ Failed: $failed"
-        echo "   📁 Total processes: ${#pids[@]}"
-        
-        if [ $failed -eq 0 ]; then
-            echo "🎉 All model downloads completed successfully!"
-        else
-            echo "⚠️  Some downloads failed, but continuing..."
-        fi
-    else
-        echo "ℹ️  No downloads were started"
-    fi
-}
-
-# Function to check download progress (non-blocking)
-check_download_progress() {
-    if [ -n "$MODEL_DOWNLOAD_PIDS" ]; then
-        local pids=($MODEL_DOWNLOAD_PIDS)
-        local running=0
-        local completed=0
-        
-        for pid in "${pids[@]}"; do
-            if kill -0 $pid 2>/dev/null; then
-                ((running++))
-            else
-                ((completed++))
-            fi
-        done
-        
-        echo "📊 Download Progress: $completed/${#pids[@]} completed, $running running"
-    fi
-}
-
-# Export functions for use in other scripts
-export -f download_models
-export -f wait_for_downloads
-export -f check_download_progress
-
-# Start downloads if called directly
-if [[ "${BASH_SOURCE[0]}" == "${0}" ]]; then
-    download_models
 fi
+
+if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
+    echo "Downloading FLUX FP8 models..."
+    download_hf "https://huggingface.co/lllyasviel/flux1_dev/resolve/main/flux1-dev-fp8.safetensors" "$DIFFUSION_MODELS_DIR/flux1-dev-fp8.safetensors" &
+    download_hf "https://huggingface.co/alimama-creative/FLUX.1-Turbo-Alpha/resolve/main/diffusion_pytorch_model.safetensors" "$LORAS_DIR/flux1-turbo-alpha.safetensors" &
+    download_hf "https://huggingface.co/akkisdiary/myra-flux/resolve/main/myra.safetensors" "$LORAS_DIR/myra.safetensors" &
+    # https://civitai.com/models/580857/realistic-skin-texture-style-xl-detailed-skin-sd15-flux1d-pony-illu?modelVersionId=1081450
+    download_civitai "1081450" "$LORAS_DIR" &
+    # https://civitai.com/models/1662740?modelVersionId=1881976
+    download_civitai "1881976" "$LORAS_DIR" &
+    # https://civitai.com/models/1822984/instagirl-wan-22?modelVersionId=2180477
+    download_civitai "2180477" "$LORAS_DIR" &
+fi
+
+if [ "$DOWNLOAD_FLUX_KONTEXT" == "true" ]; then
+    echo "Downloading FLUX KONTEXT models..."
+    download_hf "https://huggingface.co/black-forest-labs/FLUX.1-Kontext-dev/resolve/main/flux1-kontext-dev.safetensors" "$DIFFUSION_MODELS_DIR/flux1-kontext-dev.safetensors" &
+fi
+
+# Common FLUX models
+if [ "$DOWNLOAD_FLUX" == "true" || "$DOWNLOAD_FLUX_KONTEXT" == "true" ]; then
+    echo "Downloading Common FLUX models..."
+    download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn_scaled.safetensors" "$TEXT_ENCODERS_DIR/t5xxl_fp8_e4m3fn_scaled.safetensors" &
+    download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors" "$TEXT_ENCODERS_DIR/clip_l.safetensors" &
+    download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
+fi
+
+# Up-Scalers
+echo "Downloading Up-Scalers..."
+download_hf "https://huggingface.co/uwg/upscaler/resolve/main/ESRGAN/4x_NMKD-Siax_200k.pth" "$UPSCALE_MODELS_DIR/4x_NMKD-Siax_200k.pth" &
+download_hf "https://huggingface.co/wavespeed/misc/resolve/main/upscalers/4xLSDIR.pth" "$UPSCALE_MODELS_DIR/4xLSDIR.pth" &
+
+
+echo "⏳ Waiting for model downloads to complete..."
+sleep 10
+
+while pgrep -x "curl" > /dev/null; do
+    echo "🔽 Model downloads still in progress [$(pgrep -x "curl")]..."
+    sleep 5  # Check every 5 seconds
+done
+while pgrep -x "aria2c" > /dev/null; do
+    echo "🔽 Model downloads still in progress [$(pgrep -x "aria2c")]..."
+    sleep 5  # Check every 5 seconds
+done
+
+echo "✅ Downloading models complete"

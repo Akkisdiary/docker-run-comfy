@@ -1,15 +1,18 @@
 services:
-  run-comfy-wan:
+  comfyui:
     build:
       context: .
       dockerfile: Dockerfile.cpu
     
-    container_name: run-comfy-wan
-    hostname: run-comfy-wan
+    container_name: comfyui
+    hostname: comfyui
     
     environment:
       - HF_TOKEN=${HF_TOKEN:-}
       - CIVITAI_TOKEN=${CIVITAI_TOKEN:-}
+      - DOWNLOAD_WAN22=false
+      - DOWNLOAD_FLUX=false
+      - DOWNLOAD_FLUX_KONTEXT=false
     
     ports:
       - "8188:8188"                 # ComfyUI web interface
@@ -17,26 +20,5 @@ services:
     
     # Simulate RunPod network volume by mounting entire /workspace
     volumes:
-      - ./src:/src
+      # - ./src:/src
       - ./workspace:/workspace
-    
-    # Resource limits appropriate for testing
-    deploy:
-      resources:
-        limits:
-          memory: 8G
-        reservations:
-          memory: 2G
-    
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8188/"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 60s
-    
-    logging:
-      driver: "json-file"
-      options:
-        max-size: "50m"
-        max-file: "2"

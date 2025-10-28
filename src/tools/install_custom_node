@@ -1,0 +1,21 @@
+#!/bin/bash
+
+set -e
+
+REPO="$1"
+REPO_DIR=$(basename "$REPO" .git);
+CUSTOM_NODES_DIR="/ComfyUI/custom_nodes";
+
+cd $CUSTOM_NODES_DIR;
+
+git clone --recursive "$REPO"
+
+if [ -f "$CUSTOM_NODES_DIR/$REPO_DIR/requirements.txt" ]; then
+    pip install -r "$CUSTOM_NODES_DIR/$REPO_DIR/requirements.txt";
+fi;
+
+if [ -f "$CUSTOM_NODES_DIR/$REPO_DIR/install.py" ]; then
+    python "$CUSTOM_NODES_DIR/$REPO_DIR/install.py";
+fi;
+
+echo "- Custom node $REPO_DIR installed successfully"

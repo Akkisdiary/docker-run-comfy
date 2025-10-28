@@ -1,16 +1,11 @@
 #!/bin/bash
 
-# HuggingFace Download Script
-# Downloads models from HuggingFace URLs
+set -e
 
-set +e  # Don't exit on errors
-
-# Function to download from HuggingFace
 download_huggingface() {
     local download_url="$1"
     local target_file_path="$2"
     
-    # Extract directory and filename from target path
     local target_dir=$(dirname "$target_file_path")
     local filename=$(basename "$target_file_path")
     
@@ -18,13 +13,18 @@ download_huggingface() {
     echo "📁 Target file: $target_file_path"
     echo "📥 URL: $download_url"
     
-    # Create target directory if it doesn't exist
     mkdir -p "$target_dir"
+
+    if [ -z "$HF_TOKEN" ]; then
+        echo "❌ HF_TOKEN is not set. Cannot download $destination_file."
+        return 1
+    fi
     
-    # Use aria2 for direct URL download (faster and more reliable)
     aria2c -x 16 -s 16 -k 1M -d "$target_dir" -o "$filename" \
+        --header="Authorization: Bearer $HF_TOKEN" \
         --max-tries=3 --retry-wait=5 \
         --auto-file-renaming=false --continue=true \
+        --console-log-level=warn \
         "$download_url"
     
     if [ $? -eq 0 ]; then
@@ -35,5 +35,4 @@ download_huggingface() {
     fi
 }
 
-# Call the function with all arguments
 download_huggingface "$@"
