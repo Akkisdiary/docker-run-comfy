@@ -29,9 +29,10 @@ if [ "$DOWNLOAD_WAN22" == "true" ]; then
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
     download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR/Wan2.1_VAE.pth" &
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
+    download_hf "https://huggingface.co/akkisdiary/myra-wan-v2/resolve/main/output/my_first_lora_v1/my_first_lora_v1.safetensors" "$LORAS_DIR/my_first_lora_v1.safetensorssafetensors" &
     # https://civitai.com/models/1822984/instagirl-wan-22?modelVersionId=2180477
     download_civitai "2180477" "$LORAS_DIR" &
-    # https://civitai.com/models/1662740?modelVersionId=2066914
+    # https://civitai.com/models/1662740/lenovo-ultrareal?modelVersionId=2066914
     download_civitai "2066914" "$LORAS_DIR" &
 fi
 
@@ -42,7 +43,7 @@ if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
     download_hf "https://huggingface.co/akkisdiary/myra-flux/resolve/main/myra.safetensors" "$LORAS_DIR/myra.safetensors" &
     # https://civitai.com/models/580857/realistic-skin-texture-style-xl-detailed-skin-sd15-flux1d-pony-illu?modelVersionId=1081450
     download_civitai "1081450" "$LORAS_DIR" &
-    # https://civitai.com/models/1662740?modelVersionId=1881976
+    # https://civitai.com/models/1662740/lenovo-ultrareal?modelVersionId=1881976
     download_civitai "1881976" "$LORAS_DIR" &
 fi
 
