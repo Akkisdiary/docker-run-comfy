@@ -47,6 +47,7 @@ RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://githu
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Derfuu/Derfuu_ComfyUI_ModdedNodes.git
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/ssitu/ComfyUI_UltimateSDUpscale.git
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/orssorbit/ComfyUI-wanBlockswap.git
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/ClownsharkBatwing/RES4LYF.git
 
 COPY src/ .
 

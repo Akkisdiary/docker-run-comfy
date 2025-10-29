@@ -29,6 +29,10 @@ if [ "$DOWNLOAD_WAN22" == "true" ]; then
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
     download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR/Wan2.1_VAE.pth" &
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
+    # https://civitai.com/models/1822984/instagirl-wan-22?modelVersionId=2180477
+    download_civitai "2180477" "$LORAS_DIR" &
+    # https://civitai.com/models/1662740?modelVersionId=2066914
+    download_civitai "2066914" "$LORAS_DIR" &
 fi
 
 if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
@@ -40,8 +44,6 @@ if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
     download_civitai "1081450" "$LORAS_DIR" &
     # https://civitai.com/models/1662740?modelVersionId=1881976
     download_civitai "1881976" "$LORAS_DIR" &
-    # https://civitai.com/models/1822984/instagirl-wan-22?modelVersionId=2180477
-    download_civitai "2180477" "$LORAS_DIR" &
 fi
 
 if [ "$DOWNLOAD_FLUX_KONTEXT" == "true" ]; then
@@ -67,11 +69,11 @@ echo "⏳ Waiting for model downloads to complete..."
 sleep 10
 
 while pgrep -x "curl" > /dev/null; do
-    echo "🔽 Model downloads still in progress [$(pgrep -x "curl")]..."
+    echo "🔽 Model downloads still in progress [$(pgrep -x "curl" | tr '\n' ',' | sed 's/,$//')]..."
     sleep 5  # Check every 5 seconds
 done
 while pgrep -x "aria2c" > /dev/null; do
-    echo "🔽 Model downloads still in progress [$(pgrep -x "aria2c")]..."
+    echo "🔽 Model downloads still in progress [$(pgrep -x "aria2c" | tr '\n' ',' | sed 's/,$//')]..."
     sleep 5  # Check every 5 seconds
 done
 

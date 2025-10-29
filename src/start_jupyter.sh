@@ -7,7 +7,7 @@ echo "📓 Starting JupyterLab..."
 NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}"
 
 jupyter-lab --ip=0.0.0.0 --allow-root --no-browser \
-    --ServerApp.token='' --ServerApp.password='' \
+    --NotebookApp.token='' --NotebookApp.password='' \
     --ServerApp.allow_origin='*' --ServerApp.allow_credentials=True \
     --notebook-dir="/" &
 
