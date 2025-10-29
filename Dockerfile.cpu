@@ -1,11 +1,19 @@
 FROM python:3.12-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
-   PIP_PREFER_BINARY=1 \
-   PYTHONUNBUFFERED=1 \
-   CMAKE_BUILD_PARALLEL_LEVEL=8 \
-   PIP_DISABLE_PIP_VERSION_CHECK=1 \
-   PIP_NO_INPUT=1
+    PIP_PREFER_BINARY=1 \
+    PYTHONUNBUFFERED=1 \
+    CMAKE_BUILD_PARALLEL_LEVEL=8 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_INPUT=1 \
+    MODELS_DIR="/ComfyUI/models" \
+    DIFFUSION_MODELS_DIR="$MODELS_DIR/diffusion_models" \
+    TEXT_ENCODERS_DIR="$MODELS_DIR/text_encoders" \
+    CLIPS_DIR="$MODELS_DIR/clip" \
+    LORAS_DIR="$MODELS_DIR/loras" \
+    UNETS_DIR="$MODELS_DIR/unet" \
+    VAES_DIR="$MODELS_DIR/vae" \
+    UPSCALE_MODELS_DIR="$MODELS_DIR/upscale_models"
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \

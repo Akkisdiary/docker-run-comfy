@@ -13,6 +13,7 @@ services:
       - DOWNLOAD_WAN22=false
       - DOWNLOAD_FLUX_FP8=false
       - DOWNLOAD_FLUX_KONTEXT=false
+      - DOWNLOAD_FLUX_GGUF=true
     
     ports:
       - "8188:8188"                 # ComfyUI web interface

@@ -60,6 +60,14 @@ if [[ "$DOWNLOAD_FLUX" == "true" || "$DOWNLOAD_FLUX_KONTEXT" == "true" ]]; then
     download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
 fi
 
+if [ "$DOWNLOAD_FLUX_GGUF" == "true" ]; then
+    download_hf "https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q3_K_S.gguf" "$DIFFUSION_MODELS_DIR/flux1-dev-Q3_K_S.gguf" &
+    download_hf "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q3_K_S.gguf" "$TEXT_ENCODERS_DIR/t5-v1_1-xxl-encoder-Q3_K_S.gguf" &
+    download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors" "$TEXT_ENCODERS_DIR/clip_l.safetensors" &
+    download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
+    download_hf "https://huggingface.co/alimama-creative/FLUX.1-Turbo-Alpha/resolve/main/diffusion_pytorch_model.safetensors" "$LORAS_DIR/flux1-turbo-alpha.safetensors" &
+fi
+
 # Up-Scalers
 echo "Downloading Up-Scalers..."
 download_hf "https://huggingface.co/uwg/upscaler/resolve/main/ESRGAN/4x_NMKD-Siax_200k.pth" "$UPSCALE_MODELS_DIR/4x_NMKD-Siax_200k.pth" &
