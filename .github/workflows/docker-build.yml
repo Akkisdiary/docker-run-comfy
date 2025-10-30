@@ -6,7 +6,6 @@ on:
   workflow_dispatch:
 
 env:
-  IMAGE_NAME: run-comfy-wan
   REGISTRY: docker.io
 
 jobs:
@@ -49,6 +48,6 @@ jobs:
           push: true
           platforms: linux/amd64
           tags: |
-            akkisdiary/run-comfy-wan:latest
+            akkisdiary/run-comfyui:latest
           cache-from: type=gha
           cache-to: type=gha,mode=max
