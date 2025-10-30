@@ -25,10 +25,12 @@ if [ "$DOWNLOAD_WAN22" == "true" ]; then
     echo "Downloading WAN22 models..."
     download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/HighNoise/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-HighNoise-Q8_0.gguf" &
     download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" &
-    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" &
+
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
-    download_hf "https://huggingface.co/akkisdiary/myra-wan-v2/resolve/main/output/my_first_lora_v1/my_first_lora_v1.safetensors" "$LORAS_DIR/my_first_lora_v1.safetensors" &
+
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" &
+    download_hf "https://huggingface.co/akkisdiary/myra-ai/resolve/main/wan22/myra_wan22.safetensors" "$LORAS_DIR/myra_wan22.safetensors" &
     # https://civitai.com/models/1822984/instagirl-wan-22?modelVersionId=2180477
     download_civitai "2180477" "$LORAS_DIR" &
     # https://civitai.com/models/1662740/lenovo-ultrareal?modelVersionId=2066914
@@ -38,8 +40,9 @@ fi
 if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
     echo "Downloading FLUX FP8 models..."
     download_hf "https://huggingface.co/lllyasviel/flux1_dev/resolve/main/flux1-dev-fp8.safetensors" "$DIFFUSION_MODELS_DIR/flux1-dev-fp8.safetensors" &
+    
     download_hf "https://huggingface.co/alimama-creative/FLUX.1-Turbo-Alpha/resolve/main/diffusion_pytorch_model.safetensors" "$LORAS_DIR/flux1-turbo-alpha.safetensors" &
-    download_hf "https://huggingface.co/akkisdiary/myra-flux/resolve/main/myra.safetensors" "$LORAS_DIR/myra.safetensors" &
+    download_hf "https://huggingface.co/akkisdiary/myra-ai/resolve/main/flux/myra_flux.safetensors" "$LORAS_DIR/myra_flux.safetensors" &
     # https://civitai.com/models/580857/realistic-skin-texture-style-xl-detailed-skin-sd15-flux1d-pony-illu?modelVersionId=1081450
     download_civitai "1081450" "$LORAS_DIR" &
     # https://civitai.com/models/1662740/lenovo-ultrareal?modelVersionId=1881976
@@ -57,14 +60,6 @@ if [[ "$DOWNLOAD_FLUX" == "true" || "$DOWNLOAD_FLUX_KONTEXT" == "true" ]]; then
     download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn_scaled.safetensors" "$TEXT_ENCODERS_DIR/t5xxl_fp8_e4m3fn_scaled.safetensors" &
     download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors" "$TEXT_ENCODERS_DIR/clip_l.safetensors" &
     download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
-fi
-
-if [ "$DOWNLOAD_FLUX_GGUF" == "true" ]; then
-    download_hf "https://huggingface.co/city96/FLUX.1-dev-gguf/resolve/main/flux1-dev-Q3_K_S.gguf" "$DIFFUSION_MODELS_DIR/flux1-dev-Q3_K_S.gguf" &
-    download_hf "https://huggingface.co/city96/t5-v1_1-xxl-encoder-gguf/resolve/main/t5-v1_1-xxl-encoder-Q3_K_S.gguf" "$TEXT_ENCODERS_DIR/t5-v1_1-xxl-encoder-Q3_K_S.gguf" &
-    download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors" "$TEXT_ENCODERS_DIR/clip_l.safetensors" &
-    download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
-    download_hf "https://huggingface.co/alimama-creative/FLUX.1-Turbo-Alpha/resolve/main/diffusion_pytorch_model.safetensors" "$LORAS_DIR/flux1-turbo-alpha.safetensors" &
 fi
 
 # Up-Scalers
