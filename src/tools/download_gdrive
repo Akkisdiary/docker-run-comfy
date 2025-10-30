@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -e
+
+download_gdrive() {
+    local url="$1"
+    local target_dir="${2:-.}"
+    
+    echo "Downloading from $url to $target_dir"
+    aria2c -x 16 -s 16 -k 1M -d "$target_dir" -o "$filename" \
+        --auto-file-renaming=false --continue=true \
+        --console-log-level=warn \
+        "$url"
+}
+
+download_gdrive "$@"
