@@ -7,13 +7,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_INPUT=1 \
     MODELS_DIR="/ComfyUI/models" \
-    DIFFUSION_MODELS_DIR="$MODELS_DIR/diffusion_models" \
-    TEXT_ENCODERS_DIR="$MODELS_DIR/text_encoders" \
-    CLIPS_DIR="$MODELS_DIR/clip" \
-    LORAS_DIR="$MODELS_DIR/loras" \
-    UNETS_DIR="$MODELS_DIR/unet" \
-    VAES_DIR="$MODELS_DIR/vae" \
-    UPSCALE_MODELS_DIR="$MODELS_DIR/upscale_models"
+    DIFFUSION_MODELS_DIR="/ComfyUI/models/diffusion_models" \
+    TEXT_ENCODERS_DIR="/ComfyUI/models/text_encoders" \
+    CLIPS_DIR="/ComfyUI/models/clip" \
+    LORAS_DIR="/ComfyUI/models/loras" \
+    UNETS_DIR="/ComfyUI/models/unet" \
+    VAES_DIR="/ComfyUI/models/vae" \
+    UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models"
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \

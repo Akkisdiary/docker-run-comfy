@@ -27,9 +27,8 @@ if [ "$DOWNLOAD_WAN22" == "true" ]; then
     download_hf "https://huggingface.co/QuantStack/Wan2.2-T2V-A14B-GGUF/resolve/main/LowNoise/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" "$UNETS_DIR/Wan2.2-T2V-A14B-LowNoise-Q8_0.gguf" &
     download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" "$LORAS_DIR/Wan21_T2V_14B_lightx2v_cfg_step_distill_lora_rank32.safetensors" &
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$CLIPS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
-    download_hf "https://huggingface.co/Wan-AI/Wan2.2-T2V-A14B/resolve/main/Wan2.1_VAE.pth" "$VAES_DIR/Wan2.1_VAE.pth" &
     download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
-    download_hf "https://huggingface.co/akkisdiary/myra-wan-v2/resolve/main/output/my_first_lora_v1/my_first_lora_v1.safetensors" "$LORAS_DIR/my_first_lora_v1.safetensorssafetensors" &
+    download_hf "https://huggingface.co/akkisdiary/myra-wan-v2/resolve/main/output/my_first_lora_v1/my_first_lora_v1.safetensors" "$LORAS_DIR/my_first_lora_v1.safetensors" &
     # https://civitai.com/models/1822984/instagirl-wan-22?modelVersionId=2180477
     download_civitai "2180477" "$LORAS_DIR" &
     # https://civitai.com/models/1662740/lenovo-ultrareal?modelVersionId=2066914
