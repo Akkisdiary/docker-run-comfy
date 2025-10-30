@@ -1,11 +1,4 @@
 # =============================================================================
-# Docker Ignore File for ComfyUI WAN Template
-# =============================================================================
-# Purpose: Exclude unnecessary files from Docker build context
-# Benefits: Faster builds, smaller context, improved security
-# =============================================================================
-
-# =============================================================================
 # VERSION CONTROL AND DEVELOPMENT FILES
 # =============================================================================
 # Exclude version control and development-specific files
@@ -136,15 +129,11 @@ yarn-error.log*        # Yarn error logs
 *.backup                # Backup files
 *.orig                  # Original files from merges
 *.rej                   # Rejected patches
+
+# =============================================================================
 # KEEP ESSENTIAL FILES
 # =============================================================================
 # Explicitly include essential files (overrides above exclusions)
 !Dockerfile             # Always include Dockerfile
 !requirements.txt       # Always include Python requirements
 !requirements.m1.txt    # Always include M1 Mac requirements
-
-# M1 Mac testing files (not needed in production image)
-docker-compose.m1.yml     # M1 Mac testing compose file
-Dockerfile.m1             # M1 Mac testing Dockerfile
-workspace/                # M1 Mac development volumes
-cache/                    # M1 Mac development volumes

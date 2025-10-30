@@ -81,10 +81,8 @@ download_civitai() {
             local zip_file="$target_dir/$filename"
             if unzip -q "$zip_file" -d "$target_dir"; then
                 echo "✅ Successfully extracted: $filename"
-                
-                # Optionally remove the zip file after extraction
-                # Uncomment the next line if you want to delete zip files after extraction
-                # rm "$zip_file" && echo "🗑️  Removed original zip file: $filename"
+
+                rm "$zip_file" && echo "🗑️  Removed original zip file: $filename"
             else
                 echo "❌ Failed to extract zip file: $filename"
                 echo "⚠️  Keeping original zip file"
