@@ -62,10 +62,17 @@ if [[ "$DOWNLOAD_FLUX" == "true" || "$DOWNLOAD_FLUX_KONTEXT" == "true" ]]; then
     download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
 fi
 
+if [ "$DOWNLOAD_CHROMA" == "true" ]; then
+    echo "Downloading CHROMA models..."
+    download_hf "https://huggingface.co/lodestones/Chroma/resolve/main/chroma-unlocked-v50.safetensors" "$DIFFUSION_MODELS_DIR/chroma-unlocked-v50.safetensors" &
+    download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp16.safetensors" "$TEXT_ENCODERS_DIR/t5xxl_fp16.safetensors" &
+    download_hf "https://huggingface.co/lodestones/Chroma/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
+fi
+
 # Up-Scalers
 echo "Downloading Up-Scalers..."
 download_hf "https://huggingface.co/uwg/upscaler/resolve/main/ESRGAN/4x_NMKD-Siax_200k.pth" "$UPSCALE_MODELS_DIR/4x_NMKD-Siax_200k.pth" &
-download_hf "https://huggingface.co/wavespeed/misc/resolve/main/upscalers/4xLSDIR.pth" "$UPSCALE_MODELS_DIR/4xLSDIR.pth" &
+# download_hf "https://huggingface.co/wavespeed/misc/resolve/main/upscalers/4xLSDIR.pth" "$UPSCALE_MODELS_DIR/4xLSDIR.pth" &
 
 
 echo "⏳ Waiting for model downloads to complete..."
