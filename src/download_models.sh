@@ -35,6 +35,9 @@ if [ "$DOWNLOAD_WAN22" == "true" ]; then
     download_civitai "2180477" "$LORAS_DIR" &
     # https://civitai.com/models/1662740/lenovo-ultrareal?modelVersionId=2066914
     download_civitai "2066914" "$LORAS_DIR" &
+    # [Flux/Pony] Perfect Full Round Breasts & Slim Waist
+    # https://civitai.com/models/61099?modelVersionId=2321128
+    download_civitai "2321128" "$LORAS_DIR" &
 fi
 
 if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
