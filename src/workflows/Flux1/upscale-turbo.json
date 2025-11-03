@@ -964,7 +964,7 @@
                 },
                 {
                     "on": true,
-                    "lora": "myra.safetensors",
+                    "lora": "myra_flux.safetensors",
                     "strength": 1,
                     "strengthTwo": null
                 },

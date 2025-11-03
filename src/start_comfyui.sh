@@ -16,14 +16,14 @@ if python3 -c "import torch; torch.cuda.current_device()" 2>/dev/null; then
 
     if python3 -c "import sageattention" 2>/dev/null; then
         echo "🔧 SageAttention detected - using optimized mode"
-        python3 "$COMFYUI_DIR/main.py" --listen --use-sage-attention > "$LOG_FILE" 2>&1 &
+        python3 "$COMFYUI_DIR/main.py" --listen --use-sage-attention --preview-method latent2rgb > "$LOG_FILE" 2>&1 &
     else
         echo "📊 Using standard CUDA mode"
-        python3 "$COMFYUI_DIR/main.py" --listen > "$LOG_FILE" 2>&1 &
+        python3 "$COMFYUI_DIR/main.py" --listen --preview-method latent2rgb > "$LOG_FILE" 2>&1 &
     fi
 else
     echo "💻 No CUDA detected - using CPU mode"
-    python3 "$COMFYUI_DIR/main.py" --listen --cpu > "$LOG_FILE" 2>&1 &
+    python3 "$COMFYUI_DIR/main.py" --listen --cpu --preview-method latent2rgb > "$LOG_FILE" 2>&1 &
 fi
 
 export COMFYUI_PID=$!
