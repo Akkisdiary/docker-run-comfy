@@ -46,6 +46,8 @@ if [ -d "/src/workflows" ]; then
         rm -rf "$COMFYUI_DIR/user/default/workflows"
     fi
     
+    mkdir -p "$COMFYUI_DIR/user/default"
+
     ln -sf "$NETWORK_VOLUME/workflows" "$COMFYUI_DIR/user/default/workflows"
     echo "✅ Workflows symlinked from $NETWORK_VOLUME/workflows to $COMFYUI_DIR/user/default/workflows"
 else

@@ -42,7 +42,7 @@ fi
 
 if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
     echo "Downloading FLUX FP8 models..."
-    download_hf "https://huggingface.co/lllyasviel/flux1_dev/resolve/main/flux1-dev-fp8.safetensors" "$DIFFUSION_MODELS_DIR/flux1-dev-fp8.safetensors" &
+    download_hf "https://civitai.com/api/download/models/1413133?type=Model&format=SafeTensor&size=full&fp=fp16" "$DIFFUSION_MODELS_DIR/ultrareal.safetensors" &
     download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp8_e4m3fn_scaled.safetensors" "$TEXT_ENCODERS_DIR/t5xxl_fp8_e4m3fn_scaled.safetensors" &
     download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/clip_l.safetensors" "$TEXT_ENCODERS_DIR/clip_l.safetensors" &
     download_hf "https://huggingface.co/realung/flux1-dev.safetensors/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
@@ -68,6 +68,12 @@ if [ "$DOWNLOAD_CHROMA" == "true" ]; then
     download_hf "https://huggingface.co/lodestones/Chroma/resolve/main/chroma-unlocked-v50.safetensors" "$DIFFUSION_MODELS_DIR/chroma-unlocked-v50.safetensors" &
     download_hf "https://huggingface.co/comfyanonymous/flux_text_encoders/resolve/main/t5xxl_fp16.safetensors" "$TEXT_ENCODERS_DIR/t5xxl_fp16.safetensors" &
     download_hf "https://huggingface.co/lodestones/Chroma/resolve/main/ae.safetensors" "$VAES_DIR/ae.safetensors" &
+fi
+
+if [ "$DOWNLOAD_ZIMAGE" == "true" ]; then
+    download_hf "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/text_encoders/qwen_3_4b.safetensors" "$TEXT_ENCODERS_DIR/qwen_3_4b.safetensors" &
+    download_hf "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/diffusion_models/z_image_turbo_bf16.safetensors" "$DIFFUSION_MODELS_DIR/z_image_turbo_bf16.safetensors" &
+    download_hf "https://huggingface.co/Comfy-Org/z_image_turbo/resolve/main/split_files/vae/ae.safetensors" "$VAES_DIR/ae.safetensors" &
 fi
 
 # Up-Scalers

@@ -14,6 +14,7 @@ services:
       - DOWNLOAD_FLUX_FP8=false
       - DOWNLOAD_FLUX_KONTEXT=false
       - DOWNLOAD_CHROMA=false
+      - DOWNLOAD_ZIMAGE=false
     
     ports:
       - "8188:8188"                 # ComfyUI web interface
