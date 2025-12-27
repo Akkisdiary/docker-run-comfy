@@ -10,11 +10,12 @@ services:
     environment:
       - CIVITAI_TOKEN=${CIVITAI_TOKEN:-}
       - HF_TOKEN=${HF_TOKEN:-}
-      - DOWNLOAD_WAN22=false
-      - DOWNLOAD_FLUX_FP8=false
-      - DOWNLOAD_FLUX_KONTEXT=false
-      - DOWNLOAD_CHROMA=false
-      - DOWNLOAD_ZIMAGE=false
+      - GOOGLE_API_KEY=${GOOGLE_API_KEY}
+      - DOWNLOAD_WAN22=${DOWNLOAD_WAN22:-false}
+      - DOWNLOAD_FLUX_FP8=${DOWNLOAD_FLUX_FP8:-false}
+      - DOWNLOAD_FLUX_KONTEXT=${DOWNLOAD_FLUX_KONTEXT:-false}
+      - DOWNLOAD_CHROMA=${DOWNLOAD_CHROMA:-false}
+      - DOWNLOAD_ZIMAGE=${DOWNLOAD_ZIMAGE:-false}
     
     ports:
       - "8188:8188"                 # ComfyUI web interface
