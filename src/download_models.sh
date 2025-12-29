@@ -10,6 +10,7 @@ LORAS_DIR="$MODELS_DIR/loras"
 UNETS_DIR="$MODELS_DIR/unet"
 VAES_DIR="$MODELS_DIR/vae"
 UPSCALE_MODELS_DIR="$MODELS_DIR/upscale_models"
+DETECTION_DIR="$MODELS_DIR/detection"
 
 mkdir -p "$DIFFUSION_MODELS_DIR"
 mkdir -p "$TEXT_ENCODERS_DIR"
@@ -81,7 +82,10 @@ fi
 # Steady Dancer
 if [ "$DOWNLOAD_STEADY_DANCER" == "true" ]; then
     echo "Downloading Steady Dancer..."
-    # download_hf "https://huggingface.co/Comfy-Org/ComfyUI-VideoHelperSuite/resolve/main/ComfyUI-VideoHelperSuite/ComfyUI-VideoHelperSuite.safetensors" "$LORAS_DIR/ComfyUI-VideoHelperSuite.safetensors" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy_fp8_scaled/resolve/main/SteadyDancer/Wan21_SteadyDancer_fp8_e4m3fn_scaled_KJ.safetensors" "$DIFFUSION_MODELS_DIR/Wan21_SteadyDancer_fp8_e4m3fn_scaled_KJ.safetensors" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors" "$LORAS_DIR/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors" &
+    download_hf "https://huggingface.co/JunkyByte/easy_ViTPose/resolve/main/onnx/wholebody/vitpose-l-wholebody.onnx" "$DETECTION_DIR/vitpose-l-wholebody.onnx" &
+    download_hf "https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/blob/main/process_checkpoint/det/yolov10m.onnx" "$DETECTION_DIR/yolov10m.onnx" &
 fi
 
 # Up-Scalers

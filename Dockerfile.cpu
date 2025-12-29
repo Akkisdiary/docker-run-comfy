@@ -13,7 +13,8 @@ ENV DEBIAN_FRONTEND=noninteractive \
     LORAS_DIR="/ComfyUI/models/loras" \
     UNETS_DIR="/ComfyUI/models/unet" \
     VAES_DIR="/ComfyUI/models/vae" \
-    UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models"
+    UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models" \
+    DETECTION_DIR="/ComfyUI/models/detection"
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
