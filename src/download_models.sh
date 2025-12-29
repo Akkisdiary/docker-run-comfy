@@ -78,14 +78,22 @@ if [ "$DOWNLOAD_ZIMAGE" == "true" ]; then
     download_hf "https://huggingface.co/akkisdiary/myra-ai/resolve/main/z-image/ohmyra_000003000.safetensors" "$LORAS_DIR/ohmyra_000003000.safetensors" &
 fi
 
+# Steady Dancer
+if [ "$DOWNLOAD_STEADY_DANCER" == "true" ]; then
+    echo "Downloading Steady Dancer..."
+    # download_hf "https://huggingface.co/Comfy-Org/ComfyUI-VideoHelperSuite/resolve/main/ComfyUI-VideoHelperSuite/ComfyUI-VideoHelperSuite.safetensors" "$LORAS_DIR/ComfyUI-VideoHelperSuite.safetensors" &
+fi
+
 # Up-Scalers
-echo "Downloading Up-Scalers..."
-download_hf "https://huggingface.co/uwg/upscaler/resolve/main/ESRGAN/4x_NMKD-Siax_200k.pth" "$UPSCALE_MODELS_DIR/4x_NMKD-Siax_200k.pth" &
-# download_hf "https://huggingface.co/wavespeed/misc/resolve/main/upscalers/4xLSDIR.pth" "$UPSCALE_MODELS_DIR/4xLSDIR.pth" &
+if [ "$DOWNLOAD_UPSCALER" == "true" ]; then
+    echo "Downloading Up-Scalers..."
+    download_hf "https://huggingface.co/uwg/upscaler/resolve/main/ESRGAN/4x_NMKD-Siax_200k.pth" "$UPSCALE_MODELS_DIR/4x_NMKD-Siax_200k.pth" &
+    # download_hf "https://huggingface.co/wavespeed/misc/resolve/main/upscalers/4xLSDIR.pth" "$UPSCALE_MODELS_DIR/4xLSDIR.pth" &
+fi
 
 
 echo "⏳ Waiting for model downloads to complete..."
-sleep 10
+sleep 5
 
 while pgrep -x "curl" > /dev/null; do
     echo "🔽 Model downloads still in progress [$(pgrep -x "curl" | tr '\n' ',' | sed 's/,$//')]..."

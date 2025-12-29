@@ -16,6 +16,8 @@ services:
       - DOWNLOAD_FLUX_KONTEXT=${DOWNLOAD_FLUX_KONTEXT:-false}
       - DOWNLOAD_CHROMA=${DOWNLOAD_CHROMA:-false}
       - DOWNLOAD_ZIMAGE=${DOWNLOAD_ZIMAGE:-false}
+      - DOWNLOAD_UPSCALER=${DOWNLOAD_UPSCALER:-false}
+      - DOWNLOAD_STEADY_DANCER=${DOWNLOAD_STEADY_DANCER:-false}
     
     ports:
       - "8188:8188"                 # ComfyUI web interface

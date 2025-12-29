@@ -57,6 +57,10 @@ RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://githu
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/orssorbit/ComfyUI-wanBlockswap.git
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/ClownsharkBatwing/RES4LYF.git
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Akkisdiary/ComfyUI-AnyLLM.git
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/M1kep/ComfyLiterals
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/shadowcz007/comfyui-mixlab-nodes
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-WanVideoWrapper
 
 COPY src/ .
 
