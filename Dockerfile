@@ -1,4 +1,4 @@
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_PREFER_BINARY=1 \
@@ -59,12 +59,13 @@ RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://githu
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/orssorbit/ComfyUI-wanBlockswap.git
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/ClownsharkBatwing/RES4LYF.git
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Akkisdiary/ComfyUI-AnyLLM.git
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-WanAnimatePreprocess
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/M1kep/ComfyLiterals
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/shadowcz007/comfyui-mixlab-nodes
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-WanVideoWrapper
-RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Fannovel16/comfyui_controlnet_aux
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-segment-anything-2
 
 COPY src/ .
 
