@@ -18,6 +18,7 @@ services:
       - DOWNLOAD_ZIMAGE=${DOWNLOAD_ZIMAGE:-false}
       - DOWNLOAD_UPSCALER=${DOWNLOAD_UPSCALER:-false}
       - DOWNLOAD_STEADY_DANCER=${DOWNLOAD_STEADY_DANCER:-false}
+      - DOWNLOAD_WAN22_ANIMATE=${DOWNLOAD_WAN22_ANIMATE:-false}
     
     ports:
       - "8188:8188"                 # ComfyUI web interface

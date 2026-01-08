@@ -6,6 +6,7 @@ MODELS_DIR="/ComfyUI/models"
 DIFFUSION_MODELS_DIR="$MODELS_DIR/diffusion_models"
 TEXT_ENCODERS_DIR="$MODELS_DIR/text_encoders"
 CLIPS_DIR="$MODELS_DIR/clip"
+CLIP_VISION_DIR="$MODELS_DIR/clip_vision"
 LORAS_DIR="$MODELS_DIR/loras"
 UNETS_DIR="$MODELS_DIR/unet"
 VAES_DIR="$MODELS_DIR/vae"
@@ -15,6 +16,7 @@ DETECTION_DIR="$MODELS_DIR/detection"
 mkdir -p "$DIFFUSION_MODELS_DIR"
 mkdir -p "$TEXT_ENCODERS_DIR"
 mkdir -p "$CLIPS_DIR"
+mkdir -p "$CLIP_VISION_DIR"
 mkdir -p "$LORAS_DIR"
 mkdir -p "$UNETS_DIR"
 mkdir -p "$VAES_DIR"
@@ -39,6 +41,14 @@ if [ "$DOWNLOAD_WAN22" == "true" ]; then
     # [Flux/Pony] Perfect Full Round Breasts & Slim Waist
     # https://civitai.com/models/61099?modelVersionId=2321128
     download_civitai "2321128" "$LORAS_DIR" &
+fi
+
+if [ "$DOWNLOAD_WAN22_ANIMATE" == "true" ]; then
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy_fp8_scaled/resolve/main/Wan22Animate/Wan2_2-Animate-14B_fp8_e4m3fn_scaled_KJ.safetensors" "$DIFFUSION_MODELS_DIR/Wan2_2-Animate-14B_fp8_e4m3fn_scaled_KJ.safetensors" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/text_encoders/umt5_xxl_fp8_e4m3fn_scaled.safetensors" "$TEXT_ENCODERS_DIR/umt5_xxl_fp8_e4m3fn_scaled.safetensors" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors" "$CLIP_VISION_DIR/clip_vision_h.safetensors" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.2_ComfyUI_Repackaged/resolve/main/split_files/vae/wan_2.1_vae.safetensors" "$VAES_DIR/wan_2.1_vae.safetensors" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors" "$LORAS_DIR/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors" &
 fi
 
 if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
@@ -83,9 +93,12 @@ fi
 if [ "$DOWNLOAD_STEADY_DANCER" == "true" ]; then
     echo "Downloading Steady Dancer..."
     download_hf "https://huggingface.co/Kijai/WanVideo_comfy_fp8_scaled/resolve/main/SteadyDancer/Wan21_SteadyDancer_fp8_e4m3fn_scaled_KJ.safetensors" "$DIFFUSION_MODELS_DIR/Wan21_SteadyDancer_fp8_e4m3fn_scaled_KJ.safetensors" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/umt5-xxl-enc-bf16.safetensors" "$TEXT_ENCODERS_DIR/umt5-xxl-enc-bf16.safetensors" &
+    download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Wan2_1_VAE_bf16.safetensors" "$VAES_DIR/Wan2_1_VAE_bf16.safetensors" &
+    download_hf "https://huggingface.co/Comfy-Org/Wan_2.1_ComfyUI_repackaged/resolve/main/split_files/clip_vision/clip_vision_h.safetensors" "$CLIP_VISION_DIR/clip_vision_h.safetensors" &
     download_hf "https://huggingface.co/Kijai/WanVideo_comfy/resolve/main/Lightx2v/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors" "$LORAS_DIR/lightx2v_I2V_14B_480p_cfg_step_distill_rank64_bf16.safetensors" &
     download_hf "https://huggingface.co/JunkyByte/easy_ViTPose/resolve/main/onnx/wholebody/vitpose-l-wholebody.onnx" "$DETECTION_DIR/vitpose-l-wholebody.onnx" &
-    download_hf "https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/blob/main/process_checkpoint/det/yolov10m.onnx" "$DETECTION_DIR/yolov10m.onnx" &
+    download_hf "https://huggingface.co/Wan-AI/Wan2.2-Animate-14B/resolve/main/process_checkpoint/det/yolov10m.onnx" "$DETECTION_DIR/yolov10m.onnx" &
 fi
 
 # Up-Scalers

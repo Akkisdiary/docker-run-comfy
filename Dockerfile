@@ -10,6 +10,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     DIFFUSION_MODELS_DIR="/ComfyUI/models/diffusion_models" \
     TEXT_ENCODERS_DIR="/ComfyUI/models/text_encoders" \
     CLIPS_DIR="/ComfyUI/models/clip" \
+    CLIP_VISION_DIR="/ComfyUI/models/clip_vision" \
     LORAS_DIR="/ComfyUI/models/loras" \
     UNETS_DIR="/ComfyUI/models/unet" \
     VAES_DIR="/ComfyUI/models/vae" \
@@ -62,6 +63,8 @@ RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://githu
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/M1kep/ComfyLiterals
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/shadowcz007/comfyui-mixlab-nodes
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-WanVideoWrapper
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Kosinkadink/ComfyUI-VideoHelperSuite
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Fannovel16/comfyui_controlnet_aux
 
 COPY src/ .
 
