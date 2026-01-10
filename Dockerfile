@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_PREFER_BINARY=1 \
@@ -17,20 +17,30 @@ ENV DEBIAN_FRONTEND=noninteractive \
     UNETS_DIR="/ComfyUI/models/unet" \
     VAES_DIR="/ComfyUI/models/vae" \
     UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models" \
-    DETECTION_DIR="/ComfyUI/models/detection"
+    DETECTION_DIR="/ComfyUI/models/detection" \
+    CUDA_HOME="/usr/local/cuda" \
+    PATH="/usr/local/cuda/bin:${PATH}" \
+    LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
 
 WORKDIR /src
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-    python3-venv python3-dev python3-pip \
+    software-properties-common gnupg ca-certificates \
     curl wget aria2 git git-lfs vim unzip jq tree \
     ffmpeg ninja-build build-essential libgl1 libglib2.0-0 gcc cmake && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3.12 python3.12-venv python3.12-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN ln -sf /usr/bin/python3 /usr/bin/python && \
-    ln -sf /usr/bin/pip3 /usr/bin/pip
+RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3.12 /usr/bin/python && \
+    python3.12 -m ensurepip --upgrade && \
+    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip3 && \
+    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install packaging setuptools wheel
