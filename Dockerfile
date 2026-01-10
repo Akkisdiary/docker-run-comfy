@@ -25,7 +25,7 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
     apt-get install -y --no-install-recommends \
     python3-venv python3-dev python3-pip \
-    curl wget aria2 git git-lfs vim unzip jq \
+    curl wget aria2 git git-lfs vim unzip jq tree \
     ffmpeg ninja-build build-essential libgl1 libglib2.0-0 gcc cmake && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
