@@ -43,7 +43,7 @@ RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
     ln -sf /usr/local/bin/pip3.12 /usr/bin/pip
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip3 install packaging setuptools wheel
+    pip3 install --upgrade pip setuptools wheel packaging
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
