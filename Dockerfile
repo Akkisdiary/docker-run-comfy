@@ -5,17 +5,13 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     CMAKE_BUILD_PARALLEL_LEVEL=8 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_INPUT=1 \
-    MODELS_DIR="/ComfyUI/models" \
-    DIFFUSION_MODELS_DIR="/ComfyUI/models/diffusion_models" \
-    TEXT_ENCODERS_DIR="/ComfyUI/models/text_encoders" \
-    CLIPS_DIR="/ComfyUI/models/clip" \
-    CLIP_VISION_DIR="/ComfyUI/models/clip_vision" \
-    LORAS_DIR="/ComfyUI/models/loras" \
-    UNETS_DIR="/ComfyUI/models/unet" \
-    VAES_DIR="/ComfyUI/models/vae" \
-    UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models" \
-    DETECTION_DIR="/ComfyUI/models/detection"
+    PIP_NO_INPUT=1
+
+WORKDIR /src
+
+COPY tools/ /usr/local/bin/
+
+RUN setenv
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
@@ -29,23 +25,19 @@ RUN ln -sf /usr/bin/python3 /usr/bin/python && \
     ln -sf /usr/bin/pip3 /usr/bin/pip
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install packaging setuptools wheel
+    pip3 install packaging setuptools wheel
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
+    pip3 install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
     --index-url https://download.pytorch.org/whl/cu128
 
 COPY requirements.txt .
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip install -r requirements.txt
+    pip3 install -r requirements.txt
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     /usr/bin/yes | comfy --workspace /ComfyUI install
-
-WORKDIR /src
-
-COPY src/tools/ /usr/local/bin/
 
 # Listed separately to utilize layer caching
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/rgthree/rgthree-comfy.git
@@ -66,6 +58,8 @@ RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://githu
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-WanVideoWrapper
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/Fannovel16/comfyui_controlnet_aux
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/kijai/ComfyUI-segment-anything-2
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/calcuis/gguf
+RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/WarpedAnimation/ComfyUI-WarpedToolset
 
 COPY src/ .
 

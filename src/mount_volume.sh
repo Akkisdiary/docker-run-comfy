@@ -4,9 +4,6 @@ set -e
 
 echo "🎨 Mounting volumes..."
 
-NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}"
-COMFYUI_DIR="/ComfyUI"
-
 mkdir -p "$NETWORK_VOLUME/cache/transformers"
 mkdir -p "$NETWORK_VOLUME/cache/huggingface"
 

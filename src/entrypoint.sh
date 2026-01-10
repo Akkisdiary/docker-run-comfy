@@ -4,7 +4,6 @@ set -e
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-
 echo "🔧 Starting ComfyUI Container"
 
 if [ -f "/workspace/additional_params.sh" ]; then

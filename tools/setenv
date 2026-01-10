@@ -1,0 +1,25 @@
+#!/bin/bash
+
+set -e
+
+NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}"
+COMFYUI_DIR="/ComfyUI"
+MODELS_DIR="$COMFYUI_DIR/models"
+DIFFUSION_MODELS_DIR="$MODELS_DIR/diffusion_models"
+TEXT_ENCODERS_DIR="$MODELS_DIR/text_encoders"
+CLIPS_DIR="$MODELS_DIR/clip"
+CLIP_VISION_DIR="$MODELS_DIR/clip_vision"
+LORAS_DIR="$MODELS_DIR/loras"
+UNETS_DIR="$MODELS_DIR/unet"
+VAES_DIR="$MODELS_DIR/vae"
+UPSCALE_MODELS_DIR="$MODELS_DIR/upscale_models"
+DETECTION_DIR="$MODELS_DIR/detection"
+
+mkdir -p "$DIFFUSION_MODELS_DIR"
+mkdir -p "$TEXT_ENCODERS_DIR"
+mkdir -p "$CLIPS_DIR"
+mkdir -p "$CLIP_VISION_DIR"
+mkdir -p "$LORAS_DIR"
+mkdir -p "$UNETS_DIR"
+mkdir -p "$VAES_DIR"
+mkdir -p "$UPSCALE_MODELS_DIR"
