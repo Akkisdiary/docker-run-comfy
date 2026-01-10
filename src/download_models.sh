@@ -6,6 +6,16 @@ echo "🚀 Starting parallel model downloads..."
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 MD_DIR="$SCRIPT_DIR/model_downloaders"
 
+mkdir -p "$DIFFUSION_MODELS_DIR"
+mkdir -p "$TEXT_ENCODERS_DIR"
+mkdir -p "$CLIPS_DIR"
+mkdir -p "$CLIP_VISION_DIR"
+mkdir -p "$LORAS_DIR"
+mkdir -p "$UNETS_DIR"
+mkdir -p "$VAES_DIR"
+mkdir -p "$UPSCALE_MODELS_DIR"
+mkdir -p "$DETECTION_DIR"
+
 if [ "$DOWNLOAD_WAN22" == "true" ]; then
     source "$MD_DIR/wan-22.sh"
 fi
@@ -55,3 +65,4 @@ while pgrep -x "aria2c" > /dev/null; do
 done
 
 echo "✅ Downloading models complete"
+tree "$MODELS_DIR"

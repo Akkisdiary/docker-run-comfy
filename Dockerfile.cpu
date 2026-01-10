@@ -5,13 +5,21 @@ ENV DEBIAN_FRONTEND=noninteractive \
     PYTHONUNBUFFERED=1 \
     CMAKE_BUILD_PARALLEL_LEVEL=8 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
-    PIP_NO_INPUT=1
+    PIP_NO_INPUT=1 \
+    NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}" \
+    COMFYUI_DIR="/ComfyUI" \
+    MODELS_DIR="/ComfyUI/models" \
+    DIFFUSION_MODELS_DIR="/ComfyUI/models/diffusion_models" \
+    TEXT_ENCODERS_DIR="/ComfyUI/models/text_encoders" \
+    CLIPS_DIR="/ComfyUI/models/clip" \
+    CLIP_VISION_DIR="/ComfyUI/models/clip_vision" \
+    LORAS_DIR="/ComfyUI/models/loras" \
+    UNETS_DIR="/ComfyUI/models/unet" \
+    VAES_DIR="/ComfyUI/models/vae" \
+    UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models" \
+    DETECTION_DIR="/ComfyUI/models/detection"
 
 WORKDIR /src
-
-COPY tools/ /usr/local/bin/
-
-RUN setenv
 
 RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     apt-get update && \
@@ -38,6 +46,8 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     /usr/bin/yes | comfy --workspace /ComfyUI install
+
+COPY tools/ /usr/local/bin/
 
 # Listed separately to utilize layer caching
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/rgthree/rgthree-comfy.git
