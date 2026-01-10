@@ -1,4 +1,4 @@
-FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
+FROM nvidia/cuda:12.8.0-devel-ubuntu22.04 AS builder
 
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_PREFER_BINARY=1 \
@@ -6,7 +6,7 @@ ENV DEBIAN_FRONTEND=noninteractive \
     CMAKE_BUILD_PARALLEL_LEVEL=8 \
     PIP_DISABLE_PIP_VERSION_CHECK=1 \
     PIP_NO_INPUT=1 \
-    NETWORK_VOLUME="${NETWORK_VOLUME:-/workspace}" \
+    NETWORK_VOLUME="/workspace" \
     COMFYUI_DIR="/ComfyUI" \
     MODELS_DIR="/ComfyUI/models" \
     DIFFUSION_MODELS_DIR="/ComfyUI/models/diffusion_models" \
@@ -49,6 +49,9 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
     --index-url https://download.pytorch.org/whl/cu128
 
+RUN --mount=type=cache,target=/root/.cache/pip \
+    pip3 install git+https://github.com/thu-ml/SageAttention.git@68de379
+
 COPY requirements.txt .
 
 RUN --mount=type=cache,target=/root/.cache/pip \
@@ -82,6 +85,55 @@ RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://githu
 RUN --mount=type=cache,target=/root/.cache/pip install_custom_node https://github.com/WarpedAnimation/ComfyUI-WarpedToolset
 
 COPY src/ .
+
+FROM nvidia/cuda:12.8.0-runtime-ubuntu22.04 AS runtime
+
+ENV DEBIAN_FRONTEND=noninteractive \
+    PIP_PREFER_BINARY=1 \
+    PYTHONUNBUFFERED=1 \
+    CMAKE_BUILD_PARALLEL_LEVEL=8 \
+    PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_INPUT=1 \
+    NETWORK_VOLUME="/workspace" \
+    COMFYUI_DIR="/ComfyUI" \
+    MODELS_DIR="/ComfyUI/models" \
+    DIFFUSION_MODELS_DIR="/ComfyUI/models/diffusion_models" \
+    TEXT_ENCODERS_DIR="/ComfyUI/models/text_encoders" \
+    CLIPS_DIR="/ComfyUI/models/clip" \
+    CLIP_VISION_DIR="/ComfyUI/models/clip_vision" \
+    LORAS_DIR="/ComfyUI/models/loras" \
+    UNETS_DIR="/ComfyUI/models/unet" \
+    VAES_DIR="/ComfyUI/models/vae" \
+    UPSCALE_MODELS_DIR="/ComfyUI/models/upscale_models" \
+    DETECTION_DIR="/ComfyUI/models/detection" \
+    CUDA_HOME="/usr/local/cuda" \
+    PATH="/usr/local/cuda/bin:${PATH}" \
+    LD_LIBRARY_PATH="/usr/local/cuda/lib64:${LD_LIBRARY_PATH}"
+
+WORKDIR /src
+
+RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    software-properties-common gnupg ca-certificates \
+    curl wget aria2 git git-lfs vim unzip jq tree \
+    ffmpeg libgl1 libglib2.0-0 && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y --no-install-recommends \
+    python3.12 python3.12-venv && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
+
+RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3.12 /usr/bin/python && \
+    python3.12 -m ensurepip --upgrade && \
+    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip3 && \
+    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip
+
+COPY --from=builder /usr/local /usr/local
+COPY --from=builder /ComfyUI /ComfyUI
+COPY --from=builder /usr/local/bin /usr/local/bin
+COPY --from=builder /src /src
 
 EXPOSE 8188 8888
 

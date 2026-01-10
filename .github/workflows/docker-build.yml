@@ -17,14 +17,17 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         
-      - name: Free up disk space (fast)
+      - name: Maximize available disk space
+        uses: easimon/maximize-build-space@master
+        with:
+          root-reserve-mb: 1024
+          swap-size-mb: 1024
+          remove-dotnet: 'true'
+          remove-android: 'true'
+          remove-haskell: 'true'
+
+      - name: Docker cleanup
         run: |
-          # Only remove the largest directories in parallel
-          sudo rm -rf /usr/share/dotnet &
-          sudo rm -rf /usr/local/lib/android &
-          sudo rm -rf /opt/ghc &
-          wait
-          # Quick docker cleanup
           docker system prune -af --volumes
           df -h
         
@@ -47,7 +50,8 @@ jobs:
           file: ./Dockerfile
           push: true
           platforms: linux/amd64
+          provenance: false
           tags: |
             akkisdiary/run-comfyui:latest
           cache-from: type=gha
-          cache-to: type=gha,mode=max
+          cache-to: type=gha,mode=min
