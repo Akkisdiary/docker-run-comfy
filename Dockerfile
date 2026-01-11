@@ -50,7 +50,7 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     --index-url https://download.pytorch.org/whl/cu128
 
 RUN --mount=type=cache,target=/root/.cache/pip \
-    pip3 install git+https://github.com/thu-ml/SageAttention.git@68de379
+    pip3 install --no-build-isolation git+https://github.com/thu-ml/SageAttention.git@68de379
 
 COPY requirements.txt .
 
