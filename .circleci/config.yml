@@ -6,6 +6,9 @@ jobs:
       image: ubuntu-2204:current
     environment:
       DOCKER_BUILDKIT: "1"
+      IMAGE_NAME: "akkisdiary/run-comfyui"
+      IMAGE_TAG: "latest"
+      CACHE_TAG: "buildcache"
     steps:
       - checkout
 
@@ -22,14 +25,18 @@ jobs:
             echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
 
       - run:
-          name: Build image
+          name: Build and push image (with registry cache)
           command: |
-            docker build --progress=plain -f Dockerfile -t akkisdiary/run-comfyui:latest .
-
-      - run:
-          name: Push image
-          command: |
-            docker push akkisdiary/run-comfyui:latest
+            docker buildx create --name circleci-builder --use || docker buildx use circleci-builder
+            docker buildx inspect --bootstrap
+            docker buildx build --progress=plain \
+              --platform linux/amd64 \
+              -f Dockerfile \
+              -t "${IMAGE_NAME}:${IMAGE_TAG}" \
+              --cache-from type=registry,ref="${IMAGE_NAME}:${CACHE_TAG}" \
+              --cache-to type=registry,ref="${IMAGE_NAME}:${CACHE_TAG}",mode=max \
+              --push \
+              .
 
 workflows:
   build-and-push:
