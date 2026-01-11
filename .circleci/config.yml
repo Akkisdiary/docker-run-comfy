@@ -1,0 +1,41 @@
+version: 2.1
+
+jobs:
+  build-and-push:
+    machine:
+      image: ubuntu-2204:current
+    environment:
+      DOCKER_BUILDKIT: "1"
+    steps:
+      - checkout
+
+      - run:
+          name: Verify build context
+          command: |
+            pwd
+            ls -la
+            test -f Dockerfile
+
+      - run:
+          name: Docker login
+          command: |
+            echo "$DOCKERHUB_TOKEN" | docker login -u "$DOCKERHUB_USERNAME" --password-stdin
+
+      - run:
+          name: Build image
+          command: |
+            docker build --progress=plain -f Dockerfile -t akkisdiary/run-comfyui:latest .
+
+      - run:
+          name: Push image
+          command: |
+            docker push akkisdiary/run-comfyui:latest
+
+workflows:
+  build-and-push:
+    jobs:
+      - build-and-push:
+          filters:
+            branches:
+              only:
+                - main
