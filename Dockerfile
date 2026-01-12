@@ -32,14 +32,14 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
     add-apt-repository ppa:deadsnakes/ppa && \
     apt-get update && \
     apt-get install -y --no-install-recommends \
-    python3.12 python3.12-venv python3.12-dev && \
+    python3.11 python3.11-venv python3.11-dev && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
-RUN ln -sf /usr/bin/python3.12 /usr/bin/python3 && \
-    ln -sf /usr/bin/python3.12 /usr/bin/python && \
-    python3.12 -m ensurepip --upgrade && \
-    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip3 && \
-    ln -sf /usr/local/bin/pip3.12 /usr/bin/pip
+RUN ln -sf /usr/bin/python3.11 /usr/bin/python3 && \
+    ln -sf /usr/bin/python3.11 /usr/bin/python && \
+    python3.11 -m ensurepip --upgrade && \
+    ln -sf /usr/local/bin/pip3.11 /usr/bin/pip3 && \
+    ln -sf /usr/local/bin/pip3.11 /usr/bin/pip
 
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install --upgrade pip setuptools wheel packaging
