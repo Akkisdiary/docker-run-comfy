@@ -49,7 +49,7 @@ if [ "$DOWNLOAD_STEADY_DANCER" == "true" ]; then
 fi
 
 if [ "$DOWNLOAD_UPSCALER" == "true" ]; then
-    source "$MD_DIR/upscaler.sh"
+    source "$MD_DIR/upscalers.sh"
 fi
 
 echo "⏳ Waiting for model downloads to complete..."
