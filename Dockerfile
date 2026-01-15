@@ -1,5 +1,8 @@
 FROM nvidia/cuda:12.8.0-devel-ubuntu22.04
 
+ARG INSTALL_SAGEATTENTION=0
+ARG TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0"
+
 ENV DEBIAN_FRONTEND=noninteractive \
     PIP_PREFER_BINARY=1 \
     PYTHONUNBUFFERED=1 \
@@ -47,6 +50,12 @@ RUN --mount=type=cache,target=/root/.cache/pip \
 RUN --mount=type=cache,target=/root/.cache/pip \
     pip3 install torch==2.8.0+cu128 torchvision==0.23.0+cu128 torchaudio==2.8.0+cu128 \
     --index-url https://download.pytorch.org/whl/cu128
+
+RUN --mount=type=cache,target=/root/.cache/pip \
+    if [ "${INSTALL_SAGEATTENTION}" = "1" ]; then \
+      TORCH_CUDA_ARCH_LIST="${TORCH_CUDA_ARCH_LIST}" \
+      pip3 install --no-build-isolation git+https://github.com/thu-ml/SageAttention.git; \
+    fi
 
 COPY requirements.txt .
 

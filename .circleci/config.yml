@@ -3,7 +3,8 @@ version: 2.1
 jobs:
   build-and-push:
     machine:
-      image: ubuntu-2204:current
+      image: linux-cuda-12:default
+    resource_class: gpu.nvidia.medium
     environment:
       DOCKER_BUILDKIT: "1"
       IMAGE_NAME: "akkisdiary/run-comfyui"
@@ -33,6 +34,8 @@ jobs:
               --platform linux/amd64 \
               -f Dockerfile \
               -t "${IMAGE_NAME}:${IMAGE_TAG}" \
+              --build-arg INSTALL_SAGEATTENTION=1 \
+              --build-arg TORCH_CUDA_ARCH_LIST="8.0;8.6;8.9;9.0" \
               --cache-from type=registry,ref="${IMAGE_NAME}:${CACHE_TAG}" \
               --cache-to type=registry,ref="${IMAGE_NAME}:${CACHE_TAG}",mode=max \
               --push \
