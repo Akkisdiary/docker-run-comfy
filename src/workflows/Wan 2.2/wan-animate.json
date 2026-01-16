@@ -1,8 +1,8 @@
 {
   "id": "ba1df054-50a8-4da2-b45a-25b4dde3cc2f",
   "revision": 1,
-  "last_node_id": 294,
-  "last_link_id": 723,
+  "last_node_id": 296,
+  "last_link_id": 726,
   "nodes": [
     {
       "id": 108,
@@ -69,7 +69,7 @@
       "pos": [-860, 1900],
       "size": [250, 270],
       "flags": {},
-      "order": 40,
+      "order": 41,
       "mode": 4,
       "inputs": [
         {
@@ -93,7 +93,7 @@
       "pos": [-870, 1540],
       "size": [260, 260],
       "flags": {},
-      "order": 39,
+      "order": 40,
       "mode": 4,
       "inputs": [
         {
@@ -152,7 +152,7 @@
       "pos": [-2150, 1100],
       "size": [685, 940],
       "flags": {},
-      "order": 28,
+      "order": 29,
       "mode": 0,
       "inputs": [
         {
@@ -287,7 +287,7 @@
       "pos": [-960, 400],
       "size": [294.72265625, 222],
       "flags": {},
-      "order": 26,
+      "order": 27,
       "mode": 0,
       "inputs": [
         {
@@ -389,7 +389,7 @@
       "pos": [-960, 690],
       "size": [294.72265625, 222],
       "flags": {},
-      "order": 27,
+      "order": 28,
       "mode": 0,
       "inputs": [
         {
@@ -491,7 +491,7 @@
       "pos": [-990, 50],
       "size": [425.27801513671875, 180.6060791015625],
       "flags": {},
-      "order": 19,
+      "order": 20,
       "mode": 0,
       "inputs": [
         { "localized_name": "clip", "name": "clip", "type": "CLIP", "link": 1 },
@@ -530,7 +530,7 @@
       "pos": [-2150, 860],
       "size": [253.60000610351562, 78],
       "flags": { "collapsed": false },
-      "order": 17,
+      "order": 18,
       "mode": 0,
       "inputs": [
         {
@@ -643,7 +643,7 @@
       "pos": [-1310, 1330],
       "size": [320, 190],
       "flags": {},
-      "order": 30,
+      "order": 31,
       "mode": 0,
       "inputs": [
         {
@@ -724,7 +724,7 @@
       "pos": [-1280, 1610],
       "size": [270, 82],
       "flags": { "collapsed": false },
-      "order": 33,
+      "order": 34,
       "mode": 0,
       "inputs": [
         {
@@ -769,7 +769,7 @@
       "pos": [-1280, 1920],
       "size": [270, 102],
       "flags": {},
-      "order": 38,
+      "order": 39,
       "mode": 0,
       "inputs": [
         {
@@ -822,7 +822,7 @@
       "pos": [-1280, 1750],
       "size": [270, 82],
       "flags": {},
-      "order": 36,
+      "order": 37,
       "mode": 0,
       "inputs": [
         {
@@ -869,7 +869,7 @@
       "pos": [610, 320],
       "size": [420, 558],
       "flags": {},
-      "order": 37,
+      "order": 38,
       "mode": 4,
       "inputs": [
         {
@@ -932,7 +932,7 @@
       "pos": [140, 330],
       "size": [420, 558],
       "flags": {},
-      "order": 35,
+      "order": 36,
       "mode": 0,
       "inputs": [
         {
@@ -977,7 +977,7 @@
       "pos": [-410, 330],
       "size": [460, 558],
       "flags": {},
-      "order": 31,
+      "order": 32,
       "mode": 0,
       "inputs": [
         {
@@ -1022,7 +1022,7 @@
       "pos": [-1800, -50],
       "size": [306.36004638671875, 82],
       "flags": {},
-      "order": 22,
+      "order": 23,
       "mode": 0,
       "inputs": [
         {
@@ -1190,7 +1190,7 @@
       "pos": [-1800, -190],
       "size": [310, 82],
       "flags": {},
-      "order": 18,
+      "order": 19,
       "mode": 0,
       "inputs": [
         {
@@ -1308,45 +1308,12 @@
       "bgcolor": "#000"
     },
     {
-      "id": 160,
-      "type": "PrimitiveInt",
-      "pos": [-1598.4556485435012, -519.5014791635305],
-      "size": [240, 82],
-      "flags": {},
-      "order": 12,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "value",
-          "name": "value",
-          "type": "INT",
-          "widget": { "name": "value" },
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "INT",
-          "name": "INT",
-          "type": "INT",
-          "links": [447, 449, 489]
-        }
-      ],
-      "title": "Height",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.59",
-        "Node name for S&R": "PrimitiveInt"
-      },
-      "widgets_values": [720, "fixed"]
-    },
-    {
       "id": 21,
       "type": "CLIPTextEncode",
       "pos": [-990, -280],
       "size": [420, 230],
       "flags": {},
-      "order": 20,
+      "order": 21,
       "mode": 0,
       "inputs": [
         {
@@ -1388,7 +1355,7 @@
       "pos": [-1402.9756273375463, -30.505752803027747],
       "size": [315, 58],
       "flags": {},
-      "order": 25,
+      "order": 26,
       "mode": 0,
       "inputs": [
         {
@@ -1427,7 +1394,7 @@
       "pos": [-1400, -260],
       "size": [306.36004638671875, 106],
       "flags": {},
-      "order": 13,
+      "order": 12,
       "mode": 0,
       "inputs": [
         {
@@ -1486,7 +1453,7 @@
       "pos": [-420, -180],
       "size": [450, 450],
       "flags": {},
-      "order": 29,
+      "order": 30,
       "mode": 0,
       "inputs": [
         {
@@ -1568,7 +1535,7 @@
           "name": "fps",
           "type": "FLOAT",
           "widget": { "name": "fps" },
-          "link": 715
+          "link": 724
         },
         {
           "name": "seed",
@@ -1655,45 +1622,12 @@
       ]
     },
     {
-      "id": 159,
-      "type": "PrimitiveInt",
-      "pos": [-1328.4556485435012, -519.5014791635305],
-      "size": [240, 82],
-      "flags": {},
-      "order": 14,
-      "mode": 0,
-      "inputs": [
-        {
-          "localized_name": "value",
-          "name": "value",
-          "type": "INT",
-          "widget": { "name": "value" },
-          "link": null
-        }
-      ],
-      "outputs": [
-        {
-          "localized_name": "INT",
-          "name": "INT",
-          "type": "INT",
-          "links": [446, 448, 488, 536, 708]
-        }
-      ],
-      "title": "Width",
-      "properties": {
-        "cnr_id": "comfy-core",
-        "ver": "0.3.59",
-        "Node name for S&R": "PrimitiveInt"
-      },
-      "widgets_values": [1280, "fixed"]
-    },
-    {
       "id": 242,
       "type": "975ed319-ca2b-461e-b42a-8e2704ba902f",
       "pos": [130, -180],
       "size": [410, 470],
       "flags": {},
-      "order": 32,
+      "order": 33,
       "mode": 0,
       "inputs": [
         {
@@ -1812,7 +1746,7 @@
           "name": "fps",
           "type": "FLOAT",
           "widget": { "name": "fps" },
-          "link": 716
+          "link": 725
         },
         {
           "name": "length",
@@ -1870,7 +1804,7 @@
       "pos": [610, -190],
       "size": [410, 470],
       "flags": {},
-      "order": 34,
+      "order": 35,
       "mode": 4,
       "inputs": [
         {
@@ -1989,7 +1923,7 @@
           "name": "fps",
           "type": "FLOAT",
           "widget": { "name": "fps" },
-          "link": 717
+          "link": 726
         },
         {
           "name": "length",
@@ -2047,7 +1981,7 @@
       "pos": [-1729.292215421329, 385.72816786315366],
       "size": [380.87676789769534, 538.3262960267962],
       "flags": {},
-      "order": 16,
+      "order": 13,
       "mode": 0,
       "inputs": [
         {
@@ -2086,7 +2020,7 @@
       "pos": [-1295.65546864312, 499.81691456269795],
       "size": [270, 130],
       "flags": {},
-      "order": 24,
+      "order": 25,
       "mode": 0,
       "inputs": [
         {
@@ -2145,7 +2079,7 @@
       "pos": [-1303.3469221896557, 796.8005835305626],
       "size": [291.71484375, 106],
       "flags": {},
-      "order": 23,
+      "order": 24,
       "mode": 0,
       "inputs": [
         {
@@ -2198,7 +2132,7 @@
       "pos": [-1302.316446561276, 382.6850280471458],
       "size": [290.1290684981011, 70],
       "flags": { "collapsed": false },
-      "order": 21,
+      "order": 22,
       "mode": 0,
       "inputs": [
         {
@@ -2221,12 +2155,7 @@
           "type": "AUDIO",
           "links": [478, 526, 698]
         },
-        {
-          "localized_name": "fps",
-          "name": "fps",
-          "type": "FLOAT",
-          "links": [715, 716, 717]
-        }
+        { "localized_name": "fps", "name": "fps", "type": "FLOAT", "links": [] }
       ],
       "properties": {
         "cnr_id": "comfy-core",
@@ -2236,12 +2165,78 @@
       "widgets_values": []
     },
     {
-      "id": 285,
+      "id": 159,
       "type": "PrimitiveInt",
-      "pos": [-963.0133016811394, -507.9006963914687],
+      "pos": [-1832.1791397899563, -518.5162205259645],
+      "size": [240, 82],
+      "flags": {},
+      "order": 14,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "INT",
+          "widget": { "name": "value" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [446, 448, 488, 536, 708]
+        }
+      ],
+      "title": "Width",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.59",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [1280, "fixed"]
+    },
+    {
+      "id": 160,
+      "type": "PrimitiveInt",
+      "pos": [-1497.6548786644316, -520.3906150071871],
       "size": [240, 82],
       "flags": {},
       "order": 15,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "value",
+          "name": "value",
+          "type": "INT",
+          "widget": { "name": "value" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "INT",
+          "name": "INT",
+          "type": "INT",
+          "links": [447, 449, 489]
+        }
+      ],
+      "title": "Height",
+      "properties": {
+        "cnr_id": "comfy-core",
+        "ver": "0.3.59",
+        "Node name for S&R": "PrimitiveInt"
+      },
+      "widgets_values": [720, "fixed"]
+    },
+    {
+      "id": 285,
+      "type": "PrimitiveInt",
+      "pos": [-828.4894516057161, -513.3236240144921],
+      "size": [240, 82],
+      "flags": {},
+      "order": 16,
       "mode": 0,
       "inputs": [
         {
@@ -2267,6 +2262,39 @@
         "Node name for S&R": "PrimitiveInt"
       },
       "widgets_values": [120, "fixed"]
+    },
+    {
+      "id": 296,
+      "type": "Float",
+      "pos": [-1162.9165886578683, -503.10243333874797],
+      "size": [249.12533325613003, 58],
+      "flags": {},
+      "order": 17,
+      "mode": 0,
+      "inputs": [
+        {
+          "localized_name": "Number",
+          "name": "Number",
+          "type": "STRING",
+          "widget": { "name": "Number" },
+          "link": null
+        }
+      ],
+      "outputs": [
+        {
+          "localized_name": "FLOAT",
+          "name": "FLOAT",
+          "type": "FLOAT",
+          "links": [724, 725, 726]
+        }
+      ],
+      "title": "fps",
+      "properties": {
+        "aux_id": "M1kep/ComfyLiterals",
+        "ver": "bdddb08ca82d90d75d97b1d437a652e0284a32ac",
+        "Node name for S&R": "Float"
+      },
+      "widgets_values": ["24"]
     }
   ],
   "links": [
@@ -2336,12 +2364,12 @@
     [708, 159, 0, 278, 12, "INT"],
     [710, 242, 0, 278, 3, "IMAGE"],
     [711, 242, 1, 278, 13, "INT"],
-    [715, 23, 2, 232, 13, "FLOAT"],
-    [716, 23, 2, 242, 19, "FLOAT"],
-    [717, 23, 2, 278, 19, "FLOAT"],
     [719, 285, 0, 232, 19, "INT"],
     [720, 285, 0, 242, 20, "INT"],
-    [721, 285, 0, 278, 20, "INT"]
+    [721, 285, 0, 278, 20, "INT"],
+    [724, 296, 0, 232, 13, "FLOAT"],
+    [725, 296, 0, 242, 19, "FLOAT"],
+    [726, 296, 0, 278, 19, "FLOAT"]
   ],
   "groups": [
     {
@@ -2396,8 +2424,8 @@
       "id": 16,
       "title": "Video size",
       "bounding": [
-        -1618.4556485435012, -619.50147916353, 1124.4678866490399,
-        225.05231593555033
+        -1889.2095282862285, -626.7587501036475, 1395.7424315254402,
+        236.29067259005905
       ],
       "color": "#3f789e",
       "font_size": 24,
@@ -5331,8 +5359,8 @@
   "config": {},
   "extra": {
     "ds": {
-      "scale": 0.724326523671988,
-      "offset": [2290.056222803361, 929.7060952313809]
+      "scale": 0.48765748574114925,
+      "offset": [2364.8920753237953, 882.4670599656395]
     },
     "frontendVersion": "1.32.1",
     "workflowRendererVersion": "LG",
