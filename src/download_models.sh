@@ -28,6 +28,10 @@ if [ "$DOWNLOAD_FLUX_FP8" == "true" ]; then
     source "$MD_DIR/flux-fp8.sh"
 fi
 
+if [ "$DOWNLOAD_FLUX_KLEIN" == "true" ]; then
+    source "$MD_DIR/flux2-klein.sh"
+fi
+
 if [ "$DOWNLOAD_FLUX_KONTEXT" == "true" ]; then
     source "$MD_DIR/flux-konext.sh"
 fi
